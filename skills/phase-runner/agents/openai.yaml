@@ -1,0 +1,4 @@
+interface:
+  display_name: "Phase Runner"
+  short_description: "Run phased work continuously and sync project status."
+  default_prompt: "Use $phase-runner to continue the current phase from PROJECT_STATUS.md, validate it, update status, and move to the next safe phase."

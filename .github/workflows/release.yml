@@ -1,0 +1,92 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Release tag, for example v0.1.1 or v0.2.0-beta.1"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Build Windows Release
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve release metadata
+        id: meta
+        shell: pwsh
+        run: |
+          $tag = "${{ github.ref_name }}"
+          if ("${{ github.event_name }}" -eq "workflow_dispatch") {
+            $tag = "${{ github.event.inputs.release_tag }}"
+          }
+
+          if ([string]::IsNullOrWhiteSpace($tag)) {
+            throw "Release tag is required."
+          }
+
+          $isPrerelease = if ($tag.Contains("-")) { "true" } else { "false" }
+
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "tag=$tag"
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "is_prerelease=$isPrerelease"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate release build
+        run: npm run check
+
+      - name: Build Tauri app and create draft release
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ steps.meta.outputs.tag }}
+          releaseName: DeskHub ${{ steps.meta.outputs.tag }}
+          releaseBody: |
+            Automated DeskHub release draft.
+
+            Before publishing:
+            - confirm the matching CHANGELOG entry
+            - verify Windows installer and bundle artifacts
+            - add upgrade notes or known limitations if needed
+          releaseDraft: true
+          prerelease: ${{ steps.meta.outputs.is_prerelease }}
+
+      - name: Upload bundle artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: deskhub-${{ steps.meta.outputs.tag }}-windows-bundle
+          path: src-tauri/target/release/bundle/**
+          if-no-files-found: error
