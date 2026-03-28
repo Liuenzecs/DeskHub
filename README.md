@@ -1,6 +1,21 @@
+<div align="center">
+
 # DeskHub
 
+**Your local launch console for apps, projects, websites and workflows.**
+
 DeskHub 是一个基于 `Tauri + React + TypeScript + Tailwind CSS + SQLite` 的桌面工作台，用来统一管理本地工具和常用网站，并支持一键启动与工作流。
+
+![Platform](https://img.shields.io/badge/Platform-Windows%20First-639922?style=for-the-badge)
+![Stack](https://img.shields.io/badge/Stack-Tauri%20%2B%20React%20%2B%20SQLite-1A1A1A?style=for-the-badge)
+![Search](https://img.shields.io/badge/Search-Ctrl%20%2B%20K%20First-378ADD?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-V2.1%20Stable%20Enhancement-E6E2D9?style=for-the-badge&labelColor=1A1A1A)
+
+[首版素材预览](./release-assets/first-release-draft/README.md) · [项目状态](./PROJECT_STATUS.md) · [关键决策](./DECISIONS.md)
+
+</div>
+
+![DeskHub Overview](./release-assets/first-release-draft/screenshots/01-overview.png)
 
 它不是传统的大留白 Dashboard，而是偏高密度、键盘优先、面向开发者和高频电脑用户的“桌面控制台”。核心目标只有四个：
 
@@ -8,6 +23,47 @@ DeskHub 是一个基于 `Tauri + React + TypeScript + Tailwind CSS + SQLite` 的
 - 启动快
 - 管理快
 - 数据可靠
+
+## 界面预览
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <img src="./release-assets/first-release-draft/screenshots/02-command-palette-empty.png" alt="DeskHub Command Palette" />
+      <p><strong>命令面板是一号入口</strong><br />搜索应用、项目、网站、页面导航和全局动作，减少层层进入页面的成本。</p>
+    </td>
+    <td width="50%" valign="top">
+      <img src="./release-assets/first-release-draft/screenshots/03-command-palette-workflow-search.png" alt="DeskHub Workflow Search" />
+      <p><strong>工作流可直接搜索执行</strong><br />工作流足够高频时，直接从命令面板启动通常比进入工作流页更快。</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <img src="./release-assets/first-release-draft/screenshots/04-projects-page.png" alt="DeskHub Projects Page" />
+      <p><strong>资源页负责管理</strong><br />排序、标签筛选、收藏、多选和批量操作集中在资源页完成。</p>
+    </td>
+    <td width="50%" valign="top">
+      <img src="./release-assets/first-release-draft/screenshots/05-workflows-page.png" alt="DeskHub Workflows Page" />
+      <p><strong>工作流页负责进入状态</strong><br />步骤链直观可见，默认工作流和一键上班模式形成完整闭环。</p>
+    </td>
+  </tr>
+</table>
+
+## 为什么会需要它
+
+真实工作环境里的入口通常是碎的：
+
+- 软件在开始菜单、桌面或固定栏里
+- 项目分散在不同磁盘和工作区目录里
+- 常用网站躺在浏览器书签和历史里
+- 启动服务要敲命令
+- 固定工作流每天都要手动重复一遍
+
+DeskHub 把这些入口收进同一套模型里，让你可以：
+
+- 搜索一个名字，立刻打开目标
+- 点一下工作流，直接进入当前工作状态
+- 把最近、收藏、项目和网址都留在同一套工作台里
 
 ## 当前状态
 
@@ -35,6 +91,16 @@ DeskHub 是一个基于 `Tauri + React + TypeScript + Tailwind CSS + SQLite` 的
 - 支持总览布局自定义、预设布局切换与持久化
 - 支持 starter templates 与扩展 workflow templates
 - 支持项目目录半自动扫描导入
+
+## 核心亮点
+
+| 能力 | 说明 |
+| --- | --- |
+| 命令面板优先 | `Ctrl+K / Cmd+K` 是一号入口，支持条目、导航、动作统一搜索 |
+| 六类资源统一管理 | 应用、项目、网站、文件夹、脚本、工作流放在一处 |
+| 工作流可视化 | 直接展示步骤链，点之前就知道会执行什么 |
+| 数据层正式化 | SQLite 持久化，配套备份、恢复、导入导出、健康检查 |
+| 高密度 UI | 更接近 Raycast / Linear 风格的开发者控制台，而不是 SaaS 仪表盘 |
 
 ## 信息架构
 
