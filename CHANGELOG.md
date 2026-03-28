@@ -12,6 +12,14 @@ The format follows a simplified Keep a Changelog style, and versions are intende
 
 ### Added
 
+### Changed
+
+### Fixed
+
+## [0.2.0] - 2026-03-28
+
+### Added
+
 - Workflow `run_command` steps now support `stop / continue / retry` failure strategies.
 - Workflow steps now support condition-based execution and jump targets.
 - Workflow execution summary now displays per-step results, retry attempts, warnings, skipped steps, and jump behavior.
