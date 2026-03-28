@@ -16,6 +16,20 @@ The format follows a simplified Keep a Changelog style, and versions are intende
 
 ### Fixed
 
+## [0.2.1] - 2026-03-28
+
+### Added
+
+- Windows release build now generates an NSIS installer bundle, so tagged releases can include a `setup.exe` installer.
+
+### Changed
+
+- Tauri bundler is now explicitly enabled in `tauri.conf.json` for Windows packaging.
+
+### Fixed
+
+- Resolved the release packaging gap where `tauri build` only produced `deskhub.exe` but no installer artifact.
+
 ## [0.2.0] - 2026-03-28
 
 ### Added
