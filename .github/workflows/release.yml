@@ -67,7 +67,7 @@ jobs:
       - name: Validate release build
         run: npm run check
 
-      - name: Build Tauri app and create draft release
+      - name: Build Tauri app and publish release
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -75,13 +75,9 @@ jobs:
           tagName: ${{ steps.meta.outputs.tag }}
           releaseName: DeskHub ${{ steps.meta.outputs.tag }}
           releaseBody: |
-            Automated DeskHub release draft.
+            Automated DeskHub release.
 
-            Before publishing:
-            - confirm the matching CHANGELOG entry
-            - verify Windows installer and bundle artifacts
-            - add upgrade notes or known limitations if needed
-          releaseDraft: true
+            See CHANGELOG.md for the matching release notes.
           prerelease: ${{ steps.meta.outputs.is_prerelease }}
 
       - name: Upload bundle artifact

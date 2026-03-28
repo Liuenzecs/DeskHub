@@ -70,6 +70,7 @@ DeskHub 当前采用语义化版本号：
 
 - 正式版前的验证构建优先使用 `beta` 或 `rc`
 - GitHub Release workflow 会把包含 `-` 的 tag 视为 prerelease
+- 正式 tag 会直接发布 GitHub Release，不再先生成 draft
 
 ## 必须同步的版本位置
 
@@ -126,8 +127,8 @@ GitHub Release 自动化 workflow 位于：
 2. 更新 `CHANGELOG.md`
 3. 运行 `npm run check`
 4. 创建并推送 tag
-5. 等待 GitHub Actions 生成 Release 草稿和 Windows bundle
-6. 检查产物与 release 文案后再正式发布
+5. 等待 GitHub Actions 生成 GitHub Release 和 Windows bundle
+6. 检查产物与 release 文案是否正确
 
 ## 推荐发版命令
 

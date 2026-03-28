@@ -462,3 +462,22 @@
 - 搜索能力语义不变，但 `search-vendor` 的实际拉起时机进一步收紧
 - 命令面板首开预热继续存在，同时把历史驱动的预热成本控制在有限预算内
 - 后续“性能与包体继续收敛第二阶段”已有稳定的体积基线文档可对照，不再只靠零散 build 输出
+
+## D-030 正式 tag 直接发布 GitHub Release，预发布 tag 仍标记 prerelease
+
+状态：已生效
+
+决定：
+
+- `release.yml` 不再把正式 tag 先创建为 GitHub Release draft
+- 正式 `vX.Y.Z` tag 直接发布正式 Release
+- 包含 `-` 的 tag 继续按 prerelease 处理
+- `workflow_dispatch` 手动输入 release tag 时也沿用同一规则
+
+结果：
+
+- 以后正式发版不需要再经过“先生成 draft 再手动点发布”的固定步骤
+- 正式版与预发布版的 GitHub 行为边界更清晰：
+  - 正式 tag：直接发布
+  - 预发布 tag：直接发布为 prerelease
+- [`RELEASE.md`](./RELEASE.md) 与 [`VERSIONING.md`](./VERSIONING.md) 已同步改成新的发布语义

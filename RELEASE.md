@@ -112,7 +112,7 @@ npm run tauri:build
 其中：
 
 - `ci.yml` 负责常规校验
-- `release.yml` 负责 Windows release 构建、GitHub Release 草稿创建、bundle 产物上传
+- `release.yml` 负责 Windows release 构建、GitHub Release 创建、bundle 产物上传
 
 触发方式：
 
@@ -124,8 +124,9 @@ npm run tauri:build
 - 安装 Node / Rust 依赖
 - 运行 `npm run check`
 - 执行 Tauri Windows 构建
-- 创建或更新 GitHub Release 草稿
+- 创建或更新 GitHub Release
 - 上传 `src-tauri/target/release/bundle/` 产物
+- 正式 `vX.Y.Z` tag 直接发布正式 Release；包含 `-` 的 tag 继续标记为 prerelease
 
 ## 手动发版步骤
 
@@ -172,7 +173,7 @@ git tag v0.1.1
 git push origin v0.1.1
 ```
 
-### 6. 检查 GitHub Release 草稿
+### 6. 检查 GitHub Release
 
 重点确认：
 

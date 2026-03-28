@@ -513,6 +513,7 @@ DeskHub 当前处于 `V2.1` 的稳定增强阶段。
 - 已建立 [`CHANGELOG.md`](./CHANGELOG.md)
 - 已补齐 [`VERSIONING.md`](./VERSIONING.md) 与 [`RELEASE.md`](./RELEASE.md)
 - 已新增 GitHub release workflow
+- 正式 `vX.Y.Z` tag 现在会直接发布 GitHub Release；包含 `-` 的 tag 继续标记为 prerelease
 
 ### Q. 跨平台 launcher 预研
 
