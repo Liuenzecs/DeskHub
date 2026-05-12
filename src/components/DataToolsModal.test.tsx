@@ -23,6 +23,7 @@ const itemsMocks = vi.hoisted(() => ({
     overviewHiddenSections: [],
     overviewLayoutTemplates: [],
     overviewWorkflowLinkMode: 'none',
+    theme: 'light',
   },
   refreshDataToolHistory: vi.fn(),
   recordDataToolHistory: vi.fn(),
@@ -62,6 +63,7 @@ const workflowItem: DeskItem = {
   createdAt: '2026-03-25T00:00:00Z',
   updatedAt: '2026-03-25T00:00:00Z',
   lastLaunchedAt: null,
+  launchCount: 0,
   variables: [],
   steps: [{ id: 'step-1', type: 'open_url', url: 'https://example.com', note: '', delayMs: 0 }],
 }
@@ -83,6 +85,7 @@ describe('DataToolsModal', () => {
       overviewHiddenSections: [],
       overviewLayoutTemplates: [],
       overviewWorkflowLinkMode: 'none',
+      theme: 'light',
     }
     itemsMocks.refreshDataToolHistory.mockResolvedValue([])
     itemsMocks.recordDataToolHistory.mockImplementation(async (payload) => ({
@@ -180,6 +183,7 @@ describe('DataToolsModal', () => {
           createdAt: '2026-03-26T00:00:00Z',
           updatedAt: '2026-03-26T00:00:00Z',
           lastLaunchedAt: null,
+  launchCount: 0,
           url: 'https://docs.example.com',
         },
       ],
@@ -235,6 +239,7 @@ describe('DataToolsModal', () => {
           createdAt: '2026-03-26T00:00:00Z',
           updatedAt: '2026-03-26T00:00:00Z',
           lastLaunchedAt: null,
+  launchCount: 0,
           projectPath: 'C:\\workspace\\api',
           devCommand: 'cargo run',
         },
@@ -522,6 +527,7 @@ describe('DataToolsModal', () => {
           createdAt: '2026-03-26T00:00:00Z',
           updatedAt: '2026-03-26T00:00:00Z',
           lastLaunchedAt: null,
+  launchCount: 0,
           projectPath: 'C:\\workspace\\services\\api',
           devCommand: 'cargo run',
         },
@@ -536,6 +542,7 @@ describe('DataToolsModal', () => {
           createdAt: '2026-03-26T00:00:00Z',
           updatedAt: '2026-03-26T00:00:00Z',
           lastLaunchedAt: null,
+  launchCount: 0,
           projectPath: 'C:\\workspace\\apps\\web',
           devCommand: 'pnpm dev',
         },
@@ -550,6 +557,7 @@ describe('DataToolsModal', () => {
           createdAt: '2026-03-25T00:00:00Z',
           updatedAt: '2026-03-26T00:00:00Z',
           lastLaunchedAt: null,
+  launchCount: 0,
           projectPath: 'C:\\workspace\\docs',
           devCommand: '',
         },

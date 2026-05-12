@@ -1,4 +1,4 @@
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashMap};
 
 use serde::{Deserialize, Serialize};
 use url::Url;
@@ -38,6 +38,8 @@ pub struct UiSettings {
     pub overview_layout_templates: Vec<OverviewLayoutTemplate>,
     #[serde(default)]
     pub overview_workflow_link_mode: OverviewWorkflowLinkMode,
+    #[serde(default)]
+    pub theme: ThemeMode,
 }
 
 impl Default for UiSettings {
@@ -53,6 +55,7 @@ impl Default for UiSettings {
             overview_hidden_sections: Vec::new(),
             overview_layout_templates: Vec::new(),
             overview_workflow_link_mode: OverviewWorkflowLinkMode::None,
+            theme: ThemeMode::Light,
         }
     }
 }
@@ -64,6 +67,20 @@ pub struct UiSettingsPayload {
     pub auto_backup_interval_hours: u32,
     pub backup_retention_count: u32,
     pub diagnostic_mode: bool,
+    pub theme: Option<ThemeMode>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum ThemeMode {
+    Light,
+    Dark,
+}
+
+impl Default for ThemeMode {
+    fn default() -> Self {
+        Self::Light
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -830,6 +847,8 @@ pub struct ItemBase {
     pub created_at: String,
     pub updated_at: String,
     pub last_launched_at: Option<String>,
+    #[serde(default, rename = "launchCount")]
+    pub launch_count: u64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -848,6 +867,8 @@ pub enum DeskItem {
         project_path: String,
         #[serde(rename = "devCommand")]
         dev_command: String,
+        #[serde(default, rename = "envVars", skip_serializing_if = "HashMap::is_empty")]
+        env_vars: HashMap<String, String>,
     },
     Folder {
         #[serde(flatten)]
@@ -865,6 +886,8 @@ pub enum DeskItem {
         command: String,
         #[serde(default, rename = "executionMode")]
         execution_mode: CommandExecutionMode,
+        #[serde(default, rename = "envVars", skip_serializing_if = "HashMap::is_empty")]
+        env_vars: HashMap<String, String>,
     },
     Workflow {
         #[serde(flatten)]
@@ -901,6 +924,8 @@ pub enum ItemPayload {
         project_path: String,
         #[serde(rename = "devCommand")]
         dev_command: String,
+        #[serde(default, rename = "envVars")]
+        env_vars: HashMap<String, String>,
     },
     Folder {
         #[serde(flatten)]
@@ -918,6 +943,8 @@ pub enum ItemPayload {
         command: String,
         #[serde(default, rename = "executionMode")]
         execution_mode: CommandExecutionMode,
+        #[serde(default, rename = "envVars")]
+        env_vars: HashMap<String, String>,
     },
     Workflow {
         #[serde(flatten)]
@@ -968,6 +995,8 @@ pub enum WorkflowStep {
         delay_ms: u64,
         #[serde(default)]
         condition: Option<WorkflowStepCondition>,
+        #[serde(default, rename = "envVars", skip_serializing_if = "HashMap::is_empty")]
+        env_vars: HashMap<String, String>,
     },
 }
 
@@ -979,6 +1008,19 @@ fn clean_tags(tags: &[String]) -> Vec<String> {
     tags.iter()
         .map(|tag| clean_text(tag))
         .filter(|tag| !tag.is_empty())
+        .collect()
+}
+
+fn clean_env_vars(env_vars: &HashMap<String, String>) -> HashMap<String, String> {
+    env_vars
+        .iter()
+        .filter_map(|(k, v)| {
+            let key = k.trim().to_string();
+            if key.is_empty() {
+                return None;
+            }
+            Some((key, v.trim().to_string()))
+        })
         .collect()
 }
 
@@ -1008,6 +1050,7 @@ impl PayloadBase {
             created_at,
             updated_at,
             last_launched_at,
+            launch_count: 0,
         }
     }
 }
@@ -1480,6 +1523,7 @@ impl WorkflowStep {
                 note,
                 delay_ms,
                 condition,
+                env_vars,
             } => Self::RunCommand {
                 id: clean_text(id),
                 command: clean_text(command),
@@ -1490,6 +1534,7 @@ impl WorkflowStep {
                 note: clean_text(note),
                 delay_ms: *delay_ms,
                 condition: condition.as_ref().map(WorkflowStepCondition::normalized),
+                env_vars: clean_env_vars(env_vars),
             },
         }
     }
@@ -1650,10 +1695,12 @@ impl ItemPayload {
                 base,
                 project_path,
                 dev_command,
+                env_vars,
             } => DeskItem::Project {
                 base: base.into_item_base(id, created_at, updated_at, last_launched_at),
                 project_path: clean_text(project_path),
                 dev_command: clean_text(dev_command),
+                env_vars: clean_env_vars(env_vars),
             },
             Self::Folder { base, path } => DeskItem::Folder {
                 base: base.into_item_base(id, created_at, updated_at, last_launched_at),
@@ -1667,10 +1714,12 @@ impl ItemPayload {
                 base,
                 command,
                 execution_mode,
+                env_vars,
             } => DeskItem::Script {
                 base: base.into_item_base(id, created_at, updated_at, last_launched_at),
                 command: clean_text(command),
                 execution_mode: *execution_mode,
+                env_vars: clean_env_vars(env_vars),
             },
             Self::Workflow {
                 base,
@@ -1715,4 +1764,64 @@ impl DeskItem {
             | Self::Workflow { base, .. } => base,
         }
     }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct QuickNote {
+    pub id: String,
+    pub title: String,
+    pub content: String,
+    pub created_at: String,
+    pub updated_at: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct QuickNoteCollection {
+    pub notes: Vec<QuickNote>,
+}
+
+#[derive(Debug, Clone, Default, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct QuickNotePayload {
+    pub title: String,
+    pub content: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Space {
+    pub id: String,
+    pub name: String,
+    pub description: String,
+    pub icon: String,
+    pub color: String,
+    pub created_at: String,
+    pub updated_at: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SpaceCollection {
+    pub spaces: Vec<Space>,
+}
+
+#[derive(Debug, Clone, Default, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SpacePayload {
+    pub name: String,
+    #[serde(default)]
+    pub description: String,
+    #[serde(default)]
+    pub icon: String,
+    #[serde(default)]
+    pub color: String,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct AssignSpacesPayload {
+    pub item_ids: Vec<String>,
+    pub space_ids: Vec<String>,
 }

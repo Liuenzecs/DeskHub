@@ -5,6 +5,8 @@ export type WorkflowStepType = 'open_path' | 'open_url' | 'run_command'
 export type CommandExecutionMode = 'blocking' | 'new_terminal' | 'background'
 
 export type OverviewSectionId = 'recent' | 'favorites' | 'workflows' | 'library'
+export type ThemeMode = 'light' | 'dark'
+
 export type OverviewWorkflowLinkMode = 'none' | 'prioritize_workflows'
 
 export type WorkflowFailureStrategy = 'stop' | 'continue' | 'retry'
@@ -131,6 +133,7 @@ export interface ItemBase {
   createdAt: string
   updatedAt: string
   lastLaunchedAt: string | null
+  launchCount?: number
 }
 
 export interface AppItem extends ItemBase {
@@ -239,6 +242,7 @@ export interface UiSettings {
   overviewHiddenSections: OverviewSectionId[]
   overviewLayoutTemplates: OverviewLayoutTemplate[]
   overviewWorkflowLinkMode: OverviewWorkflowLinkMode
+  theme: ThemeMode
 }
 
 export interface UiSettingsUpdatePayload {
@@ -246,6 +250,7 @@ export interface UiSettingsUpdatePayload {
   autoBackupIntervalHours: number
   backupRetentionCount: number
   diagnosticMode: boolean
+  theme?: ThemeMode | null
 }
 
 export interface OverviewLayoutPayload {
@@ -632,6 +637,49 @@ export interface ItemFormValues {
   executionMode: CommandExecutionMode
   variables: WorkflowVariable[]
   steps: WorkflowStep[]
+}
+
+export interface QuickNote {
+  id: string
+  title: string
+  content: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface QuickNoteCollection {
+  notes: QuickNote[]
+}
+
+export interface QuickNotePayload {
+  title: string
+  content: string
+}
+
+export interface Space {
+  id: string
+  name: string
+  description: string
+  icon: string
+  color: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface SpaceCollection {
+  spaces: Space[]
+}
+
+export interface SpacePayload {
+  name: string
+  description?: string
+  icon?: string
+  color?: string
+}
+
+export interface AssignSpacesPayload {
+  itemIds: string[]
+  spaceIds: string[]
 }
 
 export type ItemFormErrors = Partial<

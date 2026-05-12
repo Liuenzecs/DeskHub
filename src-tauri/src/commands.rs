@@ -1,10 +1,11 @@
-use std::path::PathBuf;
+use std::{collections::HashMap, path::PathBuf};
 
 use tauri::State;
 
 use crate::{
     launcher,
     models::{
+        ThemeMode,
         BatchEditItemsPayload, BrowserBookmarkImportEntry, BrowserBookmarkScanResponse,
         ClearCommandHistoryResponse, ClearDataToolHistoryResponse, ClearRecentItemsResponse,
         CommandHistoryCollection, CommandHistoryPayload, DataToolHistoryCollection,
@@ -14,7 +15,9 @@ use crate::{
         ImportItemsPreviewResponse, ImportItemsResponse, ImportProjectDirectoriesResponse,
         ItemCollection, ItemPayload, LaunchResponse, OverviewLayoutPayload,
         ProjectDirectoryImportOptions, ProjectDirectoryScanOptions, ProjectDirectoryScanResponse,
-        ProjectInspectionResult, UiSettings, UiSettingsPayload, WorkflowVariableInput,
+        ProjectInspectionResult, QuickNote, QuickNoteCollection, QuickNotePayload,
+        Space, SpaceCollection, SpacePayload, AssignSpacesPayload,
+        UiSettings, UiSettingsPayload, WorkflowVariableInput,
     },
     project_inspector,
     storage::StorageState,
@@ -124,6 +127,14 @@ pub fn update_ui_settings(
     payload: UiSettingsPayload,
 ) -> Result<UiSettings, String> {
     state.update_ui_settings(&payload).map_err(to_error_message)
+}
+
+#[tauri::command]
+pub fn set_theme(
+    state: State<'_, StorageState>,
+    theme: ThemeMode,
+) -> Result<UiSettings, String> {
+    state.set_theme(&theme).map_err(to_error_message)
 }
 
 #[tauri::command]
@@ -467,4 +478,66 @@ pub fn export_structured_report(
     state
         .export_structured_report(PathBuf::from(path).as_path(), &title, &payload)
         .map_err(to_error_message)
+}
+
+#[tauri::command]
+pub fn get_notes(state: State<'_, StorageState>) -> Result<QuickNoteCollection, String> {
+    state.get_notes().map_err(to_error_message)
+}
+
+#[tauri::command]
+pub fn create_note(
+    state: State<'_, StorageState>,
+    payload: QuickNotePayload,
+) -> Result<QuickNote, String> {
+    state.create_note(&payload).map_err(to_error_message)
+}
+
+#[tauri::command]
+pub fn update_note(
+    state: State<'_, StorageState>,
+    id: String,
+    payload: QuickNotePayload,
+) -> Result<QuickNote, String> {
+    state.update_note(&id, &payload).map_err(to_error_message)
+}
+
+#[tauri::command]
+pub fn delete_note(state: State<'_, StorageState>, id: String) -> Result<(), String> {
+    state.delete_note(&id).map_err(to_error_message)
+}
+
+#[tauri::command]
+pub fn get_spaces(state: State<'_, StorageState>) -> Result<SpaceCollection, String> {
+    state.get_spaces().map_err(to_error_message)
+}
+
+#[tauri::command]
+pub fn create_space(state: State<'_, StorageState>, payload: SpacePayload) -> Result<Space, String> {
+    state.create_space(&payload).map_err(to_error_message)
+}
+
+#[tauri::command]
+pub fn update_space(state: State<'_, StorageState>, id: String, payload: SpacePayload) -> Result<Space, String> {
+    state.update_space(&id, &payload).map_err(to_error_message)
+}
+
+#[tauri::command]
+pub fn delete_space(state: State<'_, StorageState>, id: String) -> Result<(), String> {
+    state.delete_space(&id).map_err(to_error_message)
+}
+
+#[tauri::command]
+pub fn assign_items_to_spaces(state: State<'_, StorageState>, payload: AssignSpacesPayload) -> Result<(), String> {
+    state.assign_items_to_spaces(&payload).map_err(to_error_message)
+}
+
+#[tauri::command]
+pub fn remove_items_from_space(state: State<'_, StorageState>, item_ids: Vec<String>, space_id: String) -> Result<(), String> {
+    state.remove_items_from_space(&item_ids, &space_id).map_err(to_error_message)
+}
+
+#[tauri::command]
+pub fn get_item_space_ids(state: State<'_, StorageState>) -> Result<std::collections::HashMap<String, Vec<String>>, String> {
+    state.load_item_space_ids().map_err(to_error_message)
 }

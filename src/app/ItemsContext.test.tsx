@@ -65,6 +65,7 @@ const initialItems: DeskItem[] = [
     createdAt: '2026-03-25T00:00:00Z',
     updatedAt: '2026-03-25T00:00:00Z',
     lastLaunchedAt: null,
+  launchCount: 0,
     variables: [],
     steps: [{ id: 'step-1', type: 'open_url', url: 'https://example.com', note: '', delayMs: 0 }],
   },
@@ -121,6 +122,7 @@ describe('ItemsProvider', () => {
         overviewHiddenSections: [],
         overviewLayoutTemplates: [],
         overviewWorkflowLinkMode: 'none',
+        theme: 'light',
       })
       .mockResolvedValueOnce({
         defaultWorkflowId: 'workflow-2',
@@ -133,6 +135,7 @@ describe('ItemsProvider', () => {
         overviewHiddenSections: [],
         overviewLayoutTemplates: [],
         overviewWorkflowLinkMode: 'none',
+        theme: 'light',
       })
     tauriMocks.getCommandHistory
       .mockResolvedValueOnce({

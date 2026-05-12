@@ -4,7 +4,9 @@ import {
   Folder,
   FolderKanban,
   Globe,
+  Layers,
   LayoutGrid,
+  StickyNote,
   TerminalSquare,
   Workflow,
   type LucideIcon,
@@ -47,6 +49,8 @@ export const NAV_SECTIONS: Array<{ title: string; items: NavItem[] }> = [
     items: [
       { to: '/workflows', label: '工作流', icon: Workflow, keywords: ['自动化', 'workflow'] },
       { to: '/recent', label: '最近使用', icon: Clock3, keywords: ['历史', 'recent'] },
+      { to: '/spaces', label: '空间', icon: Layers, keywords: ['分组', 'group', 'space'] },
+      { to: '/notes', label: '便签', icon: StickyNote, keywords: ['笔记', 'memo', 'notes'] },
     ],
   },
 ]

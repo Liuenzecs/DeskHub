@@ -34,10 +34,6 @@ export default defineConfig({
             return 'icons-vendor'
           }
 
-          if (id.includes('/pinyin-pro/')) {
-            return 'search-vendor'
-          }
-
           if (id.includes('/sonner/')) {
             return 'feedback-vendor'
           }

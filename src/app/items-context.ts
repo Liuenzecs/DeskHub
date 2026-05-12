@@ -29,6 +29,8 @@ import type {
   ProjectDirectoryScanOptions,
   ProjectDirectoryImportOptions,
   UiSettings,
+  QuickNote,
+  QuickNotePayload,
   UiSettingsUpdatePayload,
   WorkflowItem,
   WorkflowVariableInput,
@@ -64,6 +66,7 @@ export interface ItemsContextValue {
   launchWorkflow: (id: string, startStepIndex?: number, variableInputs?: WorkflowVariableInput[]) => Promise<LaunchResponse>
   clearRecentItems: () => Promise<ClearRecentItemsResponse>
   setDefaultWorkflow: (id: string | null) => Promise<UiSettings>
+  setTheme: (theme: 'light' | 'dark') => Promise<UiSettings>
   updateUiSettings: (payload: UiSettingsUpdatePayload) => Promise<UiSettings>
   updateOverviewLayout: (payload: OverviewLayoutPayload) => Promise<UiSettings>
   recordCommandHistory: (payload: CommandHistoryPayload) => Promise<CommandHistoryEntry>
@@ -89,6 +92,11 @@ export interface ItemsContextValue {
   runDataConsistencyCheck: () => Promise<DatabaseConsistencyReport>
   optimizeDatabase: () => Promise<DatabaseMaintenanceResponse>
   openBackupsDirectory: () => Promise<FileOperationResponse>
+  notes: QuickNote[]
+  refreshNotes: () => Promise<QuickNote[]>
+  createNote: (payload: QuickNotePayload) => Promise<QuickNote>
+  updateNote: (id: string, payload: QuickNotePayload) => Promise<QuickNote>
+  deleteNote: (id: string) => Promise<void>
   exportTextReport: (path: string, title: string, lines: string[]) => Promise<ExportTextReportResponse>
   exportStructuredReport: (path: string, title: string, payload: unknown) => Promise<FileOperationResponse>
 }

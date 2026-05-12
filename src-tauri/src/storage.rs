@@ -26,9 +26,11 @@ use crate::models::{
     ImportBrowserBookmarksResponse, ImportItemsPreviewResponse, ImportItemsResponse,
     ImportPreviewItem, ImportProjectDirectoriesResponse, ItemBase, ItemCollection, ItemPayload,
     ItemsExportFile, OverviewLayoutPayload, OverviewLayoutTemplate, OverviewSectionId,
+    QuickNote, QuickNoteCollection, QuickNotePayload,
+    Space, SpaceCollection, SpacePayload, AssignSpacesPayload,
     OverviewWorkflowLinkMode, PayloadBase,
     ProjectDirectoryImportOptions, ProjectDirectoryScanOptions, ProjectDirectoryScanResponse,
-    ProjectImportConflictStrategy, RestoreDiffSummary, UiSettings, UiSettingsPayload,
+    ProjectImportConflictStrategy, RestoreDiffSummary, ThemeMode, UiSettings, UiSettingsPayload,
     WorkflowConditionFailAction, WorkflowConditionOperator, WorkflowFailureStrategy, WorkflowStep,
     WorkflowStepCondition, WorkflowVariable, default_overview_section_order,
 };
@@ -44,6 +46,7 @@ const OVERVIEW_SECTION_ORDER_KEY: &str = "overviewSectionOrder";
 const OVERVIEW_HIDDEN_SECTIONS_KEY: &str = "overviewHiddenSections";
 const OVERVIEW_LAYOUT_TEMPLATES_KEY: &str = "overviewLayoutTemplates";
 const OVERVIEW_WORKFLOW_LINK_MODE_KEY: &str = "overviewWorkflowLinkMode";
+const THEME_KEY: &str = "theme";
 const DEFAULT_AUTO_BACKUP_ENABLED: bool = true;
 const DEFAULT_AUTO_BACKUP_INTERVAL_HOURS: u32 = 24;
 const DEFAULT_BACKUP_RETENTION_COUNT: u32 = 7;
@@ -74,6 +77,8 @@ struct DbItemRecord {
     url: Option<String>,
     command: Option<String>,
     execution_mode: Option<String>,
+    env_json: Option<String>,
+    launch_count: i64,
 }
 
 struct OptionalColumns<'a> {
@@ -228,6 +233,34 @@ impl StorageState {
                 "true"
             } else {
                 "false"
+            },
+        )?;
+        if let Some(ref theme) = payload.theme {
+            upsert_setting(
+                &transaction,
+                THEME_KEY,
+                match theme {
+                    ThemeMode::Light => "light",
+                    ThemeMode::Dark => "dark",
+                },
+            )?;
+        }
+
+        transaction.commit()?;
+        load_ui_settings(&connection)
+    }
+
+    pub fn set_theme(&self, theme: &ThemeMode) -> Result<UiSettings> {
+        let _guard = self.lock()?;
+        let mut connection = self.open_connection()?;
+        let transaction = connection.transaction()?;
+
+        upsert_setting(
+            &transaction,
+            THEME_KEY,
+            match theme {
+                ThemeMode::Light => "light",
+                ThemeMode::Dark => "dark",
             },
         )?;
 
@@ -587,7 +620,7 @@ impl StorageState {
         let mut connection = self.open_connection()?;
         let transaction = connection.transaction()?;
         let affected = transaction.execute(
-            "UPDATE items SET last_launched_at = ?2 WHERE id = ?1",
+            "UPDATE items SET last_launched_at = ?2, launch_count = launch_count + 1 WHERE id = ?1",
             params![id, current_timestamp()],
         )?;
 
@@ -967,6 +1000,224 @@ impl StorageState {
             backups_directory: Some(backups_dir.display().to_string()),
             restore_diff: None,
         })
+    }
+
+    pub fn get_notes(&self) -> Result<QuickNoteCollection> {
+        let _guard = self.lock()?;
+        let connection = self.open_connection()?;
+        let mut statement = connection.prepare(
+            "SELECT id, title, content, created_at, updated_at FROM quick_notes ORDER BY updated_at DESC",
+        )?;
+        let rows = statement.query_map([], |row| {
+            Ok(QuickNote {
+                id: row.get(0)?,
+                title: row.get(1)?,
+                content: row.get(2)?,
+                created_at: row.get(3)?,
+                updated_at: row.get(4)?,
+            })
+        })?;
+        let mut notes = Vec::new();
+        for row in rows {
+            notes.push(row?);
+        }
+        Ok(QuickNoteCollection { notes })
+    }
+
+    pub fn create_note(&self, payload: &QuickNotePayload) -> Result<QuickNote> {
+        let _guard = self.lock()?;
+        let mut connection = self.open_connection()?;
+        let transaction = connection.transaction()?;
+        let id = Uuid::new_v4().to_string();
+        let now = current_timestamp();
+        transaction.execute(
+            "INSERT INTO quick_notes (id, title, content, created_at, updated_at) VALUES (?1, ?2, ?3, ?4, ?5)",
+            params![id.as_str(), payload.title.trim(), payload.content.trim(), now.as_str(), now.as_str()],
+        )?;
+        transaction.commit()?;
+        Ok(QuickNote {
+            id,
+            title: payload.title.trim().to_string(),
+            content: payload.content.trim().to_string(),
+            created_at: now.clone(),
+            updated_at: now,
+        })
+    }
+
+    pub fn update_note(&self, id: &str, payload: &QuickNotePayload) -> Result<QuickNote> {
+        let _guard = self.lock()?;
+        let mut connection = self.open_connection()?;
+        let transaction = connection.transaction()?;
+        let now = current_timestamp();
+        let affected = transaction.execute(
+            "UPDATE quick_notes SET title = ?2, content = ?3, updated_at = ?4 WHERE id = ?1",
+            params![id, payload.title.trim(), payload.content.trim(), now.as_str()],
+        )?;
+        if affected == 0 {
+            return Err(anyhow!("Note {id} was not found."));
+        }
+        transaction.commit()?;
+        let mut statement = connection.prepare(
+            "SELECT id, title, content, created_at, updated_at FROM quick_notes WHERE id = ?1",
+        )?;
+        let note = statement.query_row([id], |row| {
+            Ok(QuickNote {
+                id: row.get(0)?,
+                title: row.get(1)?,
+                content: row.get(2)?,
+                created_at: row.get(3)?,
+                updated_at: row.get(4)?,
+            })
+        })?;
+        Ok(note)
+    }
+
+    pub fn delete_note(&self, id: &str) -> Result<()> {
+        let _guard = self.lock()?;
+        let mut connection = self.open_connection()?;
+        let transaction = connection.transaction()?;
+        let affected = transaction.execute("DELETE FROM quick_notes WHERE id = ?1", [id])?;
+        if affected == 0 {
+            return Err(anyhow!("Note {id} was not found."));
+        }
+        transaction.commit()?;
+        Ok(())
+    }
+
+    pub fn get_spaces(&self) -> Result<SpaceCollection> {
+        let _guard = self.lock()?;
+        let connection = self.open_connection()?;
+        let mut statement = connection.prepare(
+            "SELECT id, name, description, icon, color, created_at, updated_at FROM spaces ORDER BY name COLLATE NOCASE ASC",
+        )?;
+        let rows = statement.query_map([], |row| {
+            Ok(Space {
+                id: row.get(0)?,
+                name: row.get(1)?,
+                description: row.get(2)?,
+                icon: row.get(3)?,
+                color: row.get(4)?,
+                created_at: row.get(5)?,
+                updated_at: row.get(6)?,
+            })
+        })?;
+        let mut spaces = Vec::new();
+        for row in rows {
+            spaces.push(row?);
+        }
+        Ok(SpaceCollection { spaces })
+    }
+
+    pub fn create_space(&self, payload: &SpacePayload) -> Result<Space> {
+        let _guard = self.lock()?;
+        let mut connection = self.open_connection()?;
+        let transaction = connection.transaction()?;
+        let id = Uuid::new_v4().to_string();
+        let now = current_timestamp();
+        transaction.execute(
+            "INSERT INTO spaces (id, name, description, icon, color, created_at, updated_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
+            params![id, payload.name.trim(), payload.description.trim(), payload.icon.trim(), payload.color.trim(), now, now],
+        )?;
+        transaction.commit()?;
+        Ok(Space {
+            id,
+            name: payload.name.trim().to_string(),
+            description: payload.description.trim().to_string(),
+            icon: payload.icon.trim().to_string(),
+            color: payload.color.trim().to_string(),
+            created_at: now.clone(),
+            updated_at: now,
+        })
+    }
+
+    pub fn update_space(&self, id: &str, payload: &SpacePayload) -> Result<Space> {
+        let _guard = self.lock()?;
+        let mut connection = self.open_connection()?;
+        let transaction = connection.transaction()?;
+        let now = current_timestamp();
+        let affected = transaction.execute(
+            "UPDATE spaces SET name = ?2, description = ?3, icon = ?4, color = ?5, updated_at = ?6 WHERE id = ?1",
+            params![id, payload.name.trim(), payload.description.trim(), payload.icon.trim(), payload.color.trim(), now],
+        )?;
+        if affected == 0 {
+            return Err(anyhow!("Space {id} was not found."));
+        }
+        transaction.commit()?;
+        let space = connection.query_row(
+            "SELECT id, name, description, icon, color, created_at, updated_at FROM spaces WHERE id = ?1",
+            [id],
+            |row| {
+                Ok(Space {
+                    id: row.get(0)?,
+                    name: row.get(1)?,
+                    description: row.get(2)?,
+                    icon: row.get(3)?,
+                    color: row.get(4)?,
+                    created_at: row.get(5)?,
+                    updated_at: row.get(6)?,
+                })
+            },
+        )?;
+        Ok(space)
+    }
+
+    pub fn delete_space(&self, id: &str) -> Result<()> {
+        let _guard = self.lock()?;
+        let mut connection = self.open_connection()?;
+        let transaction = connection.transaction()?;
+        let affected = transaction.execute("DELETE FROM spaces WHERE id = ?1", [id])?;
+        if affected == 0 {
+            return Err(anyhow!("Space {id} was not found."));
+        }
+        transaction.commit()?;
+        Ok(())
+    }
+
+    pub fn assign_items_to_spaces(&self, payload: &AssignSpacesPayload) -> Result<()> {
+        let _guard = self.lock()?;
+        let mut connection = self.open_connection()?;
+        let transaction = connection.transaction()?;
+        for item_id in &payload.item_ids {
+            for space_id in &payload.space_ids {
+                transaction.execute(
+                    "INSERT OR IGNORE INTO item_spaces (item_id, space_id) VALUES (?1, ?2)",
+                    params![item_id.as_str(), space_id.as_str()],
+                )?;
+            }
+        }
+        transaction.commit()?;
+        Ok(())
+    }
+
+    pub fn remove_items_from_space(&self, item_ids: &[String], space_id: &str) -> Result<()> {
+        let _guard = self.lock()?;
+        let mut connection = self.open_connection()?;
+        let transaction = connection.transaction()?;
+        for item_id in item_ids {
+            transaction.execute(
+                "DELETE FROM item_spaces WHERE item_id = ?1 AND space_id = ?2",
+                params![item_id.as_str(), space_id],
+            )?;
+        }
+        transaction.commit()?;
+        Ok(())
+    }
+
+    pub fn load_item_space_ids(&self) -> Result<HashMap<String, Vec<String>>> {
+        let _guard = self.lock()?;
+        let connection = self.open_connection()?;
+        let mut statement = connection.prepare(
+            "SELECT item_id, space_id FROM item_spaces ORDER BY item_id",
+        )?;
+        let rows = statement.query_map([], |row| {
+            Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?))
+        })?;
+        let mut map: HashMap<String, Vec<String>> = HashMap::new();
+        for row in rows {
+            let (item_id, space_id) = row?;
+            map.entry(item_id).or_default().push(space_id);
+        }
+        Ok(map)
     }
 
     fn lock(&self) -> Result<std::sync::MutexGuard<'_, ()>> {
@@ -1707,7 +1958,9 @@ fn load_collection(connection: &Connection) -> Result<ItemCollection> {
             path,
             url,
             command,
-            execution_mode
+            execution_mode,
+            COALESCE(env_json, '{}'),
+            COALESCE(launch_count, 0)
         FROM items
         ORDER BY updated_at DESC, name COLLATE NOCASE ASC
         ",
@@ -1731,6 +1984,8 @@ fn load_collection(connection: &Connection) -> Result<ItemCollection> {
             url: row.get(13)?,
             command: row.get(14)?,
             execution_mode: row.get(15)?,
+            env_json: row.get(16)?,
+            launch_count: row.get(17)?,
         })
     })?;
 
@@ -1930,6 +2185,7 @@ fn load_ui_settings(connection: &Connection) -> Result<UiSettings> {
         OVERVIEW_WORKFLOW_LINK_MODE_KEY,
         OverviewWorkflowLinkMode::None,
     )?;
+    let theme = load_theme_setting(connection, THEME_KEY, ThemeMode::Light)?;
 
     Ok(UiSettings {
         default_workflow_id,
@@ -1942,6 +2198,7 @@ fn load_ui_settings(connection: &Connection) -> Result<UiSettings> {
         overview_hidden_sections,
         overview_layout_templates,
         overview_workflow_link_mode,
+        theme,
     })
 }
 
@@ -1971,6 +2228,19 @@ fn load_u32_setting(connection: &Connection, key: &str, default: u32) -> Result<
     Ok(load_setting_value(connection, key)?
         .and_then(|value| value.trim().parse::<u32>().ok())
         .filter(|value| *value > 0)
+        .unwrap_or(default))
+}
+
+fn load_theme_setting(
+    connection: &Connection,
+    key: &str,
+    default: ThemeMode,
+) -> Result<ThemeMode> {
+    Ok(load_setting_value(connection, key)?
+        .map(|value| match value.trim() {
+            "dark" => ThemeMode::Dark,
+            _ => ThemeMode::Light,
+        })
         .unwrap_or(default))
 }
 
@@ -2095,7 +2365,9 @@ fn load_item_by_id(connection: &Connection, id: &str) -> Result<DeskItem> {
                 path,
                 url,
                 command,
-                execution_mode
+                execution_mode,
+                COALESCE(env_json, '{}'),
+                COALESCE(launch_count, 0)
             FROM items
             WHERE id = ?1
             ",
@@ -2118,6 +2390,8 @@ fn load_item_by_id(connection: &Connection, id: &str) -> Result<DeskItem> {
                     url: row.get(13)?,
                     command: row.get(14)?,
                     execution_mode: row.get(15)?,
+                env_json: row.get(16)?,
+                launch_count: row.get::<_, i64>(17).unwrap_or(0),
                 })
             },
         )
@@ -2273,6 +2547,7 @@ fn build_project_import_item(path: &str, timestamp: &str) -> Result<DeskItem> {
         },
         project_path: path.trim().to_string(),
         dev_command: inspection.suggested_command.unwrap_or_default(),
+        env_vars: HashMap::new(),
     };
 
     payload.validate().map_err(|message| anyhow!(message))?;
@@ -2323,6 +2598,7 @@ fn build_refreshed_project_import_item(
             } else {
                 suggested_command
             },
+            env_vars: HashMap::new(),
         }
         .into_item(
             base.id.clone(),
@@ -2441,6 +2717,11 @@ fn push_unique_tag(tags: &mut Vec<String>, tag: &str) {
 }
 
 fn map_record_to_item(connection: &Connection, record: DbItemRecord) -> Result<DeskItem> {
+    let env_vars: HashMap<String, String> = serde_json::from_str(
+        record.env_json.as_deref().unwrap_or("{}"),
+    ).unwrap_or_default();
+    let launch_count = record.launch_count.max(0) as u64;
+
     let base = ItemBase {
         id: record.id.clone(),
         name: record.name,
@@ -2451,6 +2732,7 @@ fn map_record_to_item(connection: &Connection, record: DbItemRecord) -> Result<D
         created_at: record.created_at,
         updated_at: record.updated_at,
         last_launched_at: record.last_launched_at,
+        launch_count,
     };
 
     match record.item_type.as_str() {
@@ -2462,6 +2744,7 @@ fn map_record_to_item(connection: &Connection, record: DbItemRecord) -> Result<D
             base,
             project_path: required_field("project_path", &record.id, record.project_path)?,
             dev_command: record.dev_command.unwrap_or_default(),
+            env_vars,
         }),
         "folder" => Ok(DeskItem::Folder {
             base,
@@ -2475,6 +2758,7 @@ fn map_record_to_item(connection: &Connection, record: DbItemRecord) -> Result<D
             base,
             command: required_field("command", &record.id, record.command)?,
             execution_mode: execution_mode_from_value(record.execution_mode.as_deref(), "item")?,
+            env_vars,
         }),
         "workflow" => Ok(DeskItem::Workflow {
             base,
@@ -2546,7 +2830,8 @@ fn load_workflow_steps(connection: &Connection, workflow_id: &str) -> Result<Vec
             condition_on_false,
             condition_jump_to_step_id,
             note,
-            delay_ms
+            delay_ms,
+            COALESCE(env_json, '{}')
         FROM workflow_steps
         WHERE workflow_id = ?1
         ORDER BY position ASC
@@ -2572,6 +2857,9 @@ fn load_workflow_steps(connection: &Connection, workflow_id: &str) -> Result<Vec
         let condition_jump_to_step_id: Option<String> = row.get(13)?;
         let note: String = row.get(14)?;
         let delay_ms: i64 = row.get(15)?;
+        let step_env_json: String = row.get(16)?;
+        let step_env_vars: HashMap<String, String> =
+            serde_json::from_str(&step_env_json).unwrap_or_default();
         let normalized_delay_ms = u64::try_from(delay_ms)
             .with_context(|| format!("Workflow {workflow_id} has a negative delay."))?;
         let normalized_retry_count = u32::try_from(retry_count)
@@ -2618,6 +2906,7 @@ fn load_workflow_steps(connection: &Connection, workflow_id: &str) -> Result<Vec
                 note,
                 delay_ms: normalized_delay_ms,
                 condition,
+                env_vars: step_env_vars,
             },
             other => {
                 return Err(anyhow!(
@@ -2776,6 +3065,19 @@ fn optional_columns(item: &DeskItem) -> OptionalColumns<'_> {
             command: None,
             execution_mode: None,
         },
+        DeskItem::Script {
+            command,
+            execution_mode,
+            ..
+        } => OptionalColumns {
+            launch_target: None,
+            project_path: None,
+            dev_command: None,
+            path: None,
+            url: None,
+            command: Some(command.as_str()),
+            execution_mode: Some(execution_mode.as_str()),
+        },
         DeskItem::Folder { path, .. } => OptionalColumns {
             launch_target: None,
             project_path: None,
@@ -2794,19 +3096,6 @@ fn optional_columns(item: &DeskItem) -> OptionalColumns<'_> {
             command: None,
             execution_mode: None,
         },
-        DeskItem::Script {
-            command,
-            execution_mode,
-            ..
-        } => OptionalColumns {
-            launch_target: None,
-            project_path: None,
-            dev_command: None,
-            path: None,
-            url: None,
-            command: Some(command.as_str()),
-            execution_mode: Some(execution_mode.as_str()),
-        },
         DeskItem::Workflow { .. } => OptionalColumns {
             launch_target: None,
             project_path: None,
@@ -2819,16 +3108,31 @@ fn optional_columns(item: &DeskItem) -> OptionalColumns<'_> {
     }
 }
 
+fn item_env_json(item: &DeskItem) -> String {
+    match item {
+        DeskItem::Project { env_vars, .. } | DeskItem::Script { env_vars, .. } => {
+            if env_vars.is_empty() {
+                "{}".into()
+            } else {
+                serde_json::to_string(env_vars).unwrap_or_default()
+            }
+        }
+        _ => "{}".into(),
+    }
+}
+
 fn insert_item(transaction: &Transaction<'_>, item: &DeskItem) -> Result<()> {
     let base = item.base();
     let columns = optional_columns(item);
+    let env_json = item_env_json(item);
 
     transaction.execute(
         "
         INSERT INTO items (
             id, name, type, description, icon, favorite, created_at, updated_at, last_launched_at,
-            launch_target, project_path, dev_command, path, url, command, execution_mode
-        ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16)
+            launch_target, project_path, dev_command, path, url, command, execution_mode,
+            env_json, launch_count
+        ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18)
         ",
         params![
             base.id.as_str(),
@@ -2847,6 +3151,8 @@ fn insert_item(transaction: &Transaction<'_>, item: &DeskItem) -> Result<()> {
             columns.url,
             columns.command,
             columns.execution_mode,
+            env_json.as_str(),
+            base.launch_count,
         ],
     )?;
 
@@ -2859,6 +3165,7 @@ fn insert_item(transaction: &Transaction<'_>, item: &DeskItem) -> Result<()> {
 fn update_item_row(transaction: &Transaction<'_>, item: &DeskItem) -> Result<()> {
     let base = item.base();
     let columns = optional_columns(item);
+    let env_json = item_env_json(item);
     let affected = transaction.execute(
         "
         UPDATE items
@@ -2877,7 +3184,9 @@ fn update_item_row(transaction: &Transaction<'_>, item: &DeskItem) -> Result<()>
             path = ?13,
             url = ?14,
             command = ?15,
-            execution_mode = ?16
+            execution_mode = ?16,
+            env_json = ?17,
+            launch_count = ?18
         WHERE id = ?1
         ",
         params![
@@ -2897,6 +3206,8 @@ fn update_item_row(transaction: &Transaction<'_>, item: &DeskItem) -> Result<()>
             columns.url,
             columns.command,
             columns.execution_mode,
+            env_json.as_str(),
+            base.launch_count,
         ],
     )?;
 
@@ -2986,9 +3297,10 @@ fn replace_workflow_steps(transaction: &Transaction<'_>, item: &DeskItem) -> Res
                             condition_on_false,
                             condition_jump_to_step_id,
                             note,
-                            delay_ms
+                            delay_ms,
+                            env_json
                         )
-                        VALUES (?1, ?2, ?3, 'open_path', ?4, NULL, NULL, NULL, 'stop', 0, 0, ?5, ?6, ?7, ?8, ?9, ?10, ?11)
+                        VALUES (?1, ?2, ?3, 'open_path', ?4, NULL, NULL, NULL, 'stop', 0, 0, ?5, ?6, ?7, ?8, ?9, ?10, ?11, '{}')
                         ",
                         params![
                             id,
@@ -3033,9 +3345,10 @@ fn replace_workflow_steps(transaction: &Transaction<'_>, item: &DeskItem) -> Res
                             condition_on_false,
                             condition_jump_to_step_id,
                             note,
-                            delay_ms
+                            delay_ms,
+                            env_json
                         )
-                        VALUES (?1, ?2, ?3, 'open_url', NULL, ?4, NULL, NULL, 'stop', 0, 0, ?5, ?6, ?7, ?8, ?9, ?10, ?11)
+                        VALUES (?1, ?2, ?3, 'open_url', NULL, ?4, NULL, NULL, 'stop', 0, 0, ?5, ?6, ?7, ?8, ?9, ?10, ?11, '{}')
                         ",
                         params![
                             id,
@@ -3062,8 +3375,10 @@ fn replace_workflow_steps(transaction: &Transaction<'_>, item: &DeskItem) -> Res
                     note,
                     delay_ms,
                     condition,
+                    env_vars,
                 } => {
                     let condition = condition.as_ref();
+                    let step_env_json = serde_json::to_string(env_vars).unwrap_or_default();
                     transaction.execute(
                         "
                         INSERT INTO workflow_steps (
@@ -3084,9 +3399,10 @@ fn replace_workflow_steps(transaction: &Transaction<'_>, item: &DeskItem) -> Res
                             condition_on_false,
                             condition_jump_to_step_id,
                             note,
-                            delay_ms
+                            delay_ms,
+                            env_json
                         )
-                        VALUES (?1, ?2, ?3, 'run_command', NULL, NULL, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15)
+                        VALUES (?1, ?2, ?3, 'run_command', NULL, NULL, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16)
                         ",
                         params![
                             id,
@@ -3103,7 +3419,8 @@ fn replace_workflow_steps(transaction: &Transaction<'_>, item: &DeskItem) -> Res
                             condition.map(|value| value.on_false_action.as_str()),
                             condition.and_then(|value| value.jump_to_step_id.as_deref()),
                             note,
-                            *delay_ms as i64
+                            *delay_ms as i64,
+                            step_env_json.as_str(),
                         ],
                     )?;
                 }
@@ -3400,6 +3717,7 @@ fn build_import_payload(item: &DeskItem) -> Result<ItemPayload> {
             base,
             project_path: project_path.clone(),
             dev_command: dev_command.clone(),
+            env_vars: HashMap::new(),
         },
         DeskItem::Folder { path, .. } => ItemPayload::Folder {
             base,
@@ -3417,6 +3735,7 @@ fn build_import_payload(item: &DeskItem) -> Result<ItemPayload> {
             base,
             command: command.clone(),
             execution_mode: *execution_mode,
+            env_vars: HashMap::new(),
         },
         DeskItem::Workflow {
             variables, steps, ..
@@ -3481,6 +3800,7 @@ fn build_import_payload(item: &DeskItem) -> Result<ItemPayload> {
                         note: note.clone(),
                         delay_ms: *delay_ms,
                         condition: condition.clone(),
+                        env_vars: HashMap::new(),
                     },
                 })
                 .collect(),
@@ -3551,7 +3871,7 @@ fn compute_restore_diff(before: &[DeskItem], after: &[DeskItem]) -> Result<Resto
 
 #[cfg(test)]
 mod tests {
-    use std::{fs, path::Path, thread, time::Duration};
+    use std::{collections::HashMap, fs, path::Path, thread, time::Duration};
 
     use rusqlite::{Connection, params};
     use tempfile::tempdir;
@@ -3591,6 +3911,7 @@ mod tests {
             },
             command: "echo hello".into(),
             execution_mode,
+            env_vars: HashMap::new(),
         }
     }
 
@@ -3615,6 +3936,7 @@ mod tests {
                     note: "启动服务".into(),
                     delay_ms: 400,
                     condition: None,
+            env_vars: HashMap::new(),
                 },
                 WorkflowStep::OpenUrl {
                     id: "step-2".into(),
@@ -3638,6 +3960,7 @@ mod tests {
             },
             project_path: project_path.to_string(),
             dev_command: dev_command.to_string(),
+            env_vars: HashMap::new(),
         }
     }
 
@@ -3878,6 +4201,7 @@ mod tests {
                     retry_count: 0,
                     retry_delay_ms: 0,
                     condition: None,
+            env_vars: HashMap::new(),
                 }],
             })
             .expect("created");
@@ -4521,6 +4845,7 @@ mod tests {
                 },
                 project_path: docs_dir.display().to_string(),
                 dev_command: "npm run dev".into(),
+            env_vars: HashMap::new(),
             })
             .expect("existing");
 

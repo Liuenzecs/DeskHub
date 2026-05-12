@@ -13,7 +13,10 @@ import {
   clearDataToolHistory as clearDataToolHistoryRequest,
   clearRecentItems as clearRecentItemsRequest,
   createItem as createItemRequest,
+  createNote as createNoteRequest,
   deleteItem as deleteItemRequest,
+  deleteNote as deleteNoteRequest,
+  getNotes as getNotesRequest,
   deleteItems as deleteItemsRequest,
   exportItems as exportItemsRequest,
   exportStructuredReport as exportStructuredReportRequest,
@@ -38,11 +41,13 @@ import {
   scanBrowserBookmarks as scanBrowserBookmarksRequest,
   scanProjectDirectories as scanProjectDirectoriesRequest,
   setDefaultWorkflow as setDefaultWorkflowRequest,
+  setTheme as setThemeRequest,
   setItemsFavorite as setItemsFavoriteRequest,
   toggleFavorite as toggleFavoriteRequest,
   updateOverviewLayout as updateOverviewLayoutRequest,
   updateUiSettings as updateUiSettingsRequest,
   updateItem as updateItemRequest,
+  updateNote as updateNoteRequest,
 } from '../lib/tauri'
 import { scheduleIdleWork } from '../lib/idle'
 import { sortItemsByUpdated, warmDeskItemSearchIndexes } from '../lib/item-utils'
@@ -64,6 +69,8 @@ import type {
   UiSettingsUpdatePayload,
   WorkflowItem,
   WorkflowVariableInput,
+  QuickNote,
+  QuickNotePayload,
 } from '../types/items'
 import type { RehydrateOptions } from './items-context'
 
@@ -120,6 +127,7 @@ export function ItemsProvider({ children }: PropsWithChildren) {
   const [dataToolHistory, setDataToolHistory] = useState<DataToolHistoryEntry[]>(() =>
     releaseDemoSnapshot ? sortDataToolHistory(releaseDemoSnapshot.dataToolHistory) : [],
   )
+  const [notes, setNotes] = useState<QuickNote[]>([])
   const [uiSettings, setUiSettings] = useState<UiSettings>(() =>
     releaseDemoSnapshot
       ? releaseDemoSnapshot.uiSettings
@@ -134,6 +142,7 @@ export function ItemsProvider({ children }: PropsWithChildren) {
           overviewHiddenSections: [],
           overviewLayoutTemplates: [],
           overviewWorkflowLinkMode: 'none',
+          theme: 'light',
         },
   )
   const [loading, setLoading] = useState(() => !releaseDemoSnapshot)
@@ -288,6 +297,8 @@ export function ItemsProvider({ children }: PropsWithChildren) {
         replaceItems(itemsResponse.items)
         replaceCommandHistory(historyResponse.entries)
         setUiSettings(settingsResponse)
+        const theme = settingsResponse.theme ?? 'light'
+        document.documentElement.classList.toggle('dark', theme === 'dark')
       } finally {
         setLoading(false)
       }
@@ -817,6 +828,26 @@ export function ItemsProvider({ children }: PropsWithChildren) {
         uiSettings,
         defaultWorkflow,
         loading,
+        notes,
+        refreshNotes: async () => {
+          const collection = await getNotesRequest()
+          setNotes(collection.notes)
+          return collection.notes
+        },
+        createNote: async (payload: QuickNotePayload) => {
+          const note = await createNoteRequest(payload)
+          setNotes((prev) => [note, ...prev])
+          return note
+        },
+        updateNote: async (id: string, payload: QuickNotePayload) => {
+          const note = await updateNoteRequest(id, payload)
+          setNotes((prev) => prev.map((n) => (n.id === id ? note : n)))
+          return note
+        },
+        deleteNote: async (id: string) => {
+          await deleteNoteRequest(id)
+          setNotes((prev) => prev.filter((n) => n.id !== id))
+        },
         rehydrate,
         refreshItems,
         refreshCommandHistory,
@@ -833,6 +864,18 @@ export function ItemsProvider({ children }: PropsWithChildren) {
         launchWorkflow,
         clearRecentItems,
         setDefaultWorkflow,
+        setTheme: async (theme: 'light' | 'dark') => {
+          try {
+            const settings = await setThemeRequest(theme)
+            document.documentElement.classList.toggle('dark', theme === 'dark')
+            setUiSettings(settings)
+            return settings
+          } catch (error) {
+            const message = toErrorMessage(error)
+            toast.error(message)
+            throw new Error(message)
+          }
+        },
         updateUiSettings,
         updateOverviewLayout,
         recordCommandHistory,

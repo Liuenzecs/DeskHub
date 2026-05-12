@@ -23,6 +23,20 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.dark {
+  --bg: #141416;
+  --surface: #1c1c1f;
+  --surface-muted: #242428;
+  --text: #e4e4e4;
+  --text-muted: #9e9e9a;
+  --text-soft: #6e6e6a;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --accent: #5098e6;
+  --accent-strong: #6cb0f5;
+  --ready: #7bba3b;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -45,6 +59,14 @@ body {
   font-family: 'Segoe UI Variable', 'PingFang SC', 'Microsoft YaHei UI', sans-serif;
 }
 
+.dark body,
+.dark #root {
+  background:
+    radial-gradient(circle at top left, rgba(80, 152, 230, 0.06), transparent 28%),
+    radial-gradient(circle at top right, rgba(123, 186, 59, 0.05), transparent 24%),
+    linear-gradient(180deg, #1a1a1e 0%, var(--bg) 100%);
+}
+
 button,
 input,
 textarea,
@@ -59,6 +81,10 @@ a {
 
 ::selection {
   background: rgba(55, 138, 221, 0.18);
+}
+
+.dark ::selection {
+  background: rgba(80, 152, 230, 0.22);
 }
 
 @layer components {
@@ -78,6 +104,10 @@ a {
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
   }
 
+  .dark .field {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
   .field:hover {
     border-color: var(--border-strong);
   }
@@ -85,6 +115,10 @@ a {
   .field:focus {
     border-color: var(--accent);
     box-shadow: 0 0 0 3px rgba(55, 138, 221, 0.12);
+  }
+
+  .dark .field:focus {
+    box-shadow: 0 0 0 3px rgba(80, 152, 230, 0.18);
   }
 
   .field-label {
@@ -103,6 +137,10 @@ a {
     border-color: var(--accent-strong);
   }
 
+  .dark .btn-primary {
+    box-shadow: 0 8px 18px rgba(80, 152, 230, 0.2);
+  }
+
   .btn-secondary {
     @apply inline-flex items-center justify-center rounded-xl border bg-[color:var(--surface)] px-3.5 py-2 text-sm font-medium text-[color:var(--text)] transition;
     border-color: var(--border);
@@ -112,6 +150,14 @@ a {
   .btn-secondary:hover {
     border-color: var(--border-strong);
     background: #fbfbfa;
+  }
+
+  .dark .btn-secondary {
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  .dark .btn-secondary:hover {
+    background: #28282c;
   }
 
   .btn-danger {
@@ -135,6 +181,10 @@ a {
     border-color: var(--border-strong);
     color: var(--text);
     background: #fafaf9;
+  }
+
+  .dark .btn-icon:hover {
+    background: #28282c;
   }
 
   .page-title {

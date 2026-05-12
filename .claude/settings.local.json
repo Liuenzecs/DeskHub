@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(npm run *)",
+      "Bash(npx tsc *)",
+      "Bash(./node_modules/.bin/tsc -b)",
+      "Bash(node node_modules/typescript/bin/tsc -b)",
+      "Bash(cargo check *)",
+      "Bash(cargo test *)",
+      "Bash(node node_modules/typescript/lib/tsc.js -b --pretty)",
+      "Bash(npm ci *)",
+      "Bash(npm info *)",
+      "Bash(node -e \"const d=require\\('fs'\\).readFileSync\\('/dev/stdin','utf8'\\);const j=JSON.parse\\(d\\);console.log\\('version:',j.version,'size:',j.unpackedSize\\)\")",
+      "Bash(node scripts/generate-pinyin-data.mjs)",
+      "Bash(npm uninstall *)"
+    ]
+  }
+}

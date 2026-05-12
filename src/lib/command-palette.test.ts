@@ -34,6 +34,7 @@ const fixtureItems: DeskItem[] = [
     createdAt: '2026-03-24T00:00:00Z',
     updatedAt: '2026-03-24T00:00:00Z',
     lastLaunchedAt: null,
+  launchCount: 0,
     variables: [],
     steps: [{ id: 'step-1', type: 'open_url', url: 'https://example.com', note: '', delayMs: 0 }],
   },

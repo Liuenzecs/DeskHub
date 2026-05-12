@@ -33,6 +33,7 @@ export const RELEASE_DEMO_SNAPSHOT: ReleaseDemoSnapshot = {
       createdAt: '2026-03-20T09:00:00.000Z',
       updatedAt: '2026-03-28T08:40:00.000Z',
       lastLaunchedAt: '2026-03-28T08:58:00.000Z',
+      launchCount: 0,
       launchTarget: 'C:\\Program Files\\Microsoft VS Code\\Code.exe',
     },
     {
@@ -46,6 +47,7 @@ export const RELEASE_DEMO_SNAPSHOT: ReleaseDemoSnapshot = {
       createdAt: '2026-03-20T09:05:00.000Z',
       updatedAt: '2026-03-28T08:30:00.000Z',
       lastLaunchedAt: '2026-03-28T08:54:00.000Z',
+      launchCount: 0,
       launchTarget: 'C:\\Users\\realfeeling1\\AppData\\Local\\Microsoft\\WindowsApps\\wt.exe',
     },
     {
@@ -59,6 +61,7 @@ export const RELEASE_DEMO_SNAPSHOT: ReleaseDemoSnapshot = {
       createdAt: '2026-03-20T09:10:00.000Z',
       updatedAt: '2026-03-27T18:10:00.000Z',
       lastLaunchedAt: '2026-03-27T11:20:00.000Z',
+      launchCount: 0,
       launchTarget: 'C:\\Users\\realfeeling1\\AppData\\Local\\Figma\\Figma.exe',
     },
     {
@@ -72,6 +75,7 @@ export const RELEASE_DEMO_SNAPSHOT: ReleaseDemoSnapshot = {
       createdAt: '2026-03-20T10:00:00.000Z',
       updatedAt: '2026-03-28T09:02:00.000Z',
       lastLaunchedAt: '2026-03-28T09:00:00.000Z',
+      launchCount: 0,
       projectPath: 'C:\\Users\\realfeeling1\\DeskHub',
       devCommand: 'npm run tauri:dev',
     },
@@ -86,6 +90,7 @@ export const RELEASE_DEMO_SNAPSHOT: ReleaseDemoSnapshot = {
       createdAt: '2026-03-20T10:10:00.000Z',
       updatedAt: '2026-03-27T15:20:00.000Z',
       lastLaunchedAt: '2026-03-27T09:10:00.000Z',
+      launchCount: 0,
       projectPath: 'D:\\Workspaces\\gateway-api',
       devCommand: 'pnpm dev',
     },
@@ -100,6 +105,7 @@ export const RELEASE_DEMO_SNAPSHOT: ReleaseDemoSnapshot = {
       createdAt: '2026-03-20T10:20:00.000Z',
       updatedAt: '2026-03-26T18:00:00.000Z',
       lastLaunchedAt: '2026-03-26T13:00:00.000Z',
+      launchCount: 0,
       projectPath: 'D:\\Workspaces\\docs-portal',
       devCommand: 'pnpm docs:dev',
     },
@@ -114,6 +120,7 @@ export const RELEASE_DEMO_SNAPSHOT: ReleaseDemoSnapshot = {
       createdAt: '2026-03-20T11:00:00.000Z',
       updatedAt: '2026-03-27T12:00:00.000Z',
       lastLaunchedAt: '2026-03-28T08:42:00.000Z',
+      launchCount: 0,
       url: 'https://github.com',
     },
     {
@@ -127,6 +134,7 @@ export const RELEASE_DEMO_SNAPSHOT: ReleaseDemoSnapshot = {
       createdAt: '2026-03-20T11:10:00.000Z',
       updatedAt: '2026-03-28T08:20:00.000Z',
       lastLaunchedAt: '2026-03-28T08:45:00.000Z',
+      launchCount: 0,
       url: 'https://linear.app',
     },
     {
@@ -140,6 +148,7 @@ export const RELEASE_DEMO_SNAPSHOT: ReleaseDemoSnapshot = {
       createdAt: '2026-03-20T11:20:00.000Z',
       updatedAt: '2026-03-27T16:30:00.000Z',
       lastLaunchedAt: '2026-03-27T16:32:00.000Z',
+      launchCount: 0,
       url: 'https://www.notion.so',
     },
     {
@@ -153,6 +162,7 @@ export const RELEASE_DEMO_SNAPSHOT: ReleaseDemoSnapshot = {
       createdAt: '2026-03-20T12:00:00.000Z',
       updatedAt: '2026-03-27T17:00:00.000Z',
       lastLaunchedAt: '2026-03-27T17:40:00.000Z',
+      launchCount: 0,
       path: 'D:\\Assets\\DeskHub',
     },
     {
@@ -166,6 +176,7 @@ export const RELEASE_DEMO_SNAPSHOT: ReleaseDemoSnapshot = {
       createdAt: '2026-03-20T12:10:00.000Z',
       updatedAt: '2026-03-26T15:00:00.000Z',
       lastLaunchedAt: '2026-03-26T15:10:00.000Z',
+      launchCount: 0,
       path: 'D:\\Workspaces',
     },
     {
@@ -179,6 +190,7 @@ export const RELEASE_DEMO_SNAPSHOT: ReleaseDemoSnapshot = {
       createdAt: '2026-03-20T13:00:00.000Z',
       updatedAt: '2026-03-28T08:50:00.000Z',
       lastLaunchedAt: '2026-03-28T08:51:00.000Z',
+      launchCount: 0,
       command: 'npm run check',
       executionMode: 'new_terminal',
     },
@@ -193,6 +205,7 @@ export const RELEASE_DEMO_SNAPSHOT: ReleaseDemoSnapshot = {
       createdAt: '2026-03-20T13:10:00.000Z',
       updatedAt: '2026-03-26T09:30:00.000Z',
       lastLaunchedAt: null,
+  launchCount: 0,
       command: 'pnpm clean:temp',
       executionMode: 'background',
     },
@@ -207,6 +220,7 @@ export const RELEASE_DEMO_SNAPSHOT: ReleaseDemoSnapshot = {
       createdAt: '2026-03-20T14:00:00.000Z',
       updatedAt: '2026-03-28T09:05:00.000Z',
       lastLaunchedAt: '2026-03-28T09:03:00.000Z',
+      launchCount: 0,
       variables: [
         {
           id: 'var-branch',
@@ -266,6 +280,7 @@ export const RELEASE_DEMO_SNAPSHOT: ReleaseDemoSnapshot = {
       createdAt: '2026-03-20T14:10:00.000Z',
       updatedAt: '2026-03-27T21:15:00.000Z',
       lastLaunchedAt: '2026-03-27T21:20:00.000Z',
+      launchCount: 0,
       variables: [],
       steps: [
         {
@@ -426,5 +441,6 @@ export const RELEASE_DEMO_SNAPSHOT: ReleaseDemoSnapshot = {
       },
     ],
     overviewWorkflowLinkMode: 'prioritize_workflows',
+    theme: 'light',
   },
 }

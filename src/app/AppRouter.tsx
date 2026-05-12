@@ -15,6 +15,12 @@ const WorkflowsPage = lazy(() =>
 const RecentPage = lazy(() =>
   import('../pages/RecentPage').then((module) => ({ default: module.RecentPage })),
 )
+const NotesPage = lazy(() =>
+  import('../pages/NotesPage').then((module) => ({ default: module.NotesPage })),
+)
+const SpacesPage = lazy(() =>
+  import('../pages/SpacesPage').then((module) => ({ default: module.SpacesPage })),
+)
 
 function RouteFallback() {
   return (
@@ -63,6 +69,22 @@ export function AppRouter() {
             </Suspense>
           }
           path="recent"
+        />
+        <Route
+          element={
+            <Suspense fallback={<RouteFallback />}>
+              <NotesPage />
+            </Suspense>
+          }
+          path="notes"
+        />
+        <Route
+          element={
+            <Suspense fallback={<RouteFallback />}>
+              <SpacesPage />
+            </Suspense>
+          }
+          path="spaces"
         />
       </Route>
       <Route element={<Navigate replace to="/overview" />} path="*" />

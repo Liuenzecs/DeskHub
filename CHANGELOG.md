@@ -8,6 +8,21 @@ The format follows a simplified Keep a Changelog style, and versions are intende
 - `src-tauri/Cargo.toml`
 - `src-tauri/tauri.conf.json`
 
+## [0.3.0] - 2026-05-12
+
+### Added
+- 深浅色主题切换，持久化到 SQLite 设置
+- 环境变量注入：脚本、项目和工作流步骤支持自定义环境变量
+- 使用统计：记录每个条目的启动次数
+- 系统托盘：图标、显示/隐藏/退出菜单，Alt+Shift+Space 全局快捷键
+- 快速便签：新建、编辑、删除便签，独立页面管理
+- 空间/分组：创建、编辑、删除空间，将条目分配到空间
+
+### Changed
+- 搜索包体积压缩：自建拼音数据替换 pinyin-pro（286KB → 169KB，gzip 减少 42%）
+- 所有硬编码颜色迁移到 CSS 变量，支持深色主题
+- 搜索索引支持渐进式拼音补全
+
 ## [Unreleased]
 
 ### Added

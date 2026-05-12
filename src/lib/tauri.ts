@@ -33,6 +33,13 @@ import type {
   ProjectDirectoryScanOptions,
   ProjectInspectionResult,
   UiSettings,
+  QuickNote,
+  QuickNoteCollection,
+  QuickNotePayload,
+  Space,
+  SpaceCollection,
+  SpacePayload,
+  AssignSpacesPayload,
   UiSettingsUpdatePayload,
   WorkflowVariableInput,
 } from '../types/items'
@@ -71,6 +78,10 @@ export function getUiSettings() {
 
 export function updateUiSettings(payload: UiSettingsUpdatePayload) {
   return invoke<UiSettings>('update_ui_settings', { payload })
+}
+
+export function setTheme(theme: string) {
+  return invoke<UiSettings>('set_theme', { theme })
 }
 
 export function updateOverviewLayout(payload: OverviewLayoutPayload) {
@@ -193,4 +204,48 @@ export function exportTextReport(path: string, title: string, lines: string[]) {
 
 export function exportStructuredReport(path: string, title: string, payload: unknown) {
   return invoke<FileOperationResponse>('export_structured_report', { path, title, payload })
+}
+
+export function getNotes() {
+  return invoke<QuickNoteCollection>('get_notes')
+}
+
+export function createNote(payload: QuickNotePayload) {
+  return invoke<QuickNote>('create_note', { payload })
+}
+
+export function updateNote(id: string, payload: QuickNotePayload) {
+  return invoke<QuickNote>('update_note', { id, payload })
+}
+
+export function deleteNote(id: string) {
+  return invoke<void>('delete_note', { id })
+}
+
+export function getSpaces() {
+  return invoke<SpaceCollection>('get_spaces')
+}
+
+export function createSpace(payload: SpacePayload) {
+  return invoke<Space>('create_space', { payload })
+}
+
+export function updateSpace(id: string, payload: SpacePayload) {
+  return invoke<Space>('update_space', { id, payload })
+}
+
+export function deleteSpace(id: string) {
+  return invoke<void>('delete_space', { id })
+}
+
+export function assignItemsToSpaces(payload: AssignSpacesPayload) {
+  return invoke<void>('assign_items_to_spaces', { payload })
+}
+
+export function removeItemsFromSpace(itemIds: string[], spaceId: string) {
+  return invoke<void>('remove_items_from_space', { itemIds, spaceId })
+}
+
+export function getItemSpaceIds() {
+  return invoke<Record<string, string[]>>('get_item_space_ids')
 }

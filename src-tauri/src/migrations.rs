@@ -1,7 +1,7 @@
 use anyhow::Result;
 use rusqlite::Connection;
 
-const TARGET_SCHEMA_VERSION: i64 = 6;
+const TARGET_SCHEMA_VERSION: i64 = 9;
 
 pub fn run_migrations(connection: &mut Connection) -> Result<()> {
     let version: i64 = connection.pragma_query_value(None, "user_version", |row| row.get(0))?;
@@ -26,8 +26,20 @@ pub fn run_migrations(connection: &mut Connection) -> Result<()> {
         migrate_v5_workflow_variables(connection)?;
     }
 
-    if version < TARGET_SCHEMA_VERSION {
+    if version < 6 {
         migrate_v6_workflow_flow_control(connection)?;
+    }
+
+    if version < 7 {
+        migrate_v7_item_env_and_stats(connection)?;
+    }
+
+    if version < 8 {
+        migrate_v8_quick_notes(connection)?;
+    }
+
+    if version < TARGET_SCHEMA_VERSION {
+        migrate_v9_spaces(connection)?;
     }
 
     Ok(())
@@ -412,6 +424,116 @@ fn migrate_v6_workflow_flow_control(connection: &Connection) -> Result<()> {
         }
     }
 }
+fn migrate_v7_item_env_and_stats(connection: &Connection) -> Result<()> {
+    connection.execute_batch("BEGIN;")?;
+
+    let migration = (|| -> Result<()> {
+        if !column_exists(connection, "items", "env_json")? {
+            connection.execute(
+                "ALTER TABLE items ADD COLUMN env_json TEXT NOT NULL DEFAULT '{}'",
+                [],
+            )?;
+        }
+        if !column_exists(connection, "items", "launch_count")? {
+            connection.execute(
+                "ALTER TABLE items ADD COLUMN launch_count INTEGER NOT NULL DEFAULT 0",
+                [],
+            )?;
+        }
+        if !column_exists(connection, "workflow_steps", "env_json")? {
+            connection.execute(
+                "ALTER TABLE workflow_steps ADD COLUMN env_json TEXT NOT NULL DEFAULT '{}'",
+                [],
+            )?;
+        }
+        connection.execute_batch("PRAGMA user_version = 7;")?;
+        Ok(())
+    })();
+
+    match migration {
+        Ok(()) => {
+            connection.execute_batch("COMMIT;")?;
+            Ok(())
+        }
+        Err(error) => {
+            let _ = connection.execute_batch("ROLLBACK;");
+            Err(error)
+        }
+    }
+}
+
+fn migrate_v8_quick_notes(connection: &Connection) -> Result<()> {
+    connection.execute_batch("BEGIN;")?;
+
+    let migration = (|| -> Result<()> {
+        connection.execute_batch(
+            "
+            CREATE TABLE IF NOT EXISTS quick_notes (
+                id TEXT PRIMARY KEY,
+                title TEXT NOT NULL DEFAULT '',
+                content TEXT NOT NULL DEFAULT '',
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            );
+            PRAGMA user_version = 8;
+            ",
+        )?;
+        Ok(())
+    })();
+
+    match migration {
+        Ok(()) => {
+            connection.execute_batch("COMMIT;")?;
+            Ok(())
+        }
+        Err(error) => {
+            let _ = connection.execute_batch("ROLLBACK;");
+            Err(error)
+        }
+    }
+}
+
+fn migrate_v9_spaces(connection: &Connection) -> Result<()> {
+    connection.execute_batch("BEGIN;")?;
+
+    let migration = (|| -> Result<()> {
+        connection.execute_batch(
+            "
+            CREATE TABLE IF NOT EXISTS spaces (
+                id TEXT PRIMARY KEY,
+                name TEXT NOT NULL,
+                description TEXT NOT NULL DEFAULT '',
+                icon TEXT NOT NULL DEFAULT '',
+                color TEXT NOT NULL DEFAULT '#378add',
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            );
+            CREATE TABLE IF NOT EXISTS item_spaces (
+                item_id TEXT NOT NULL,
+                space_id TEXT NOT NULL,
+                PRIMARY KEY (item_id, space_id),
+                FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE,
+                FOREIGN KEY (space_id) REFERENCES spaces(id) ON DELETE CASCADE
+            );
+            CREATE INDEX IF NOT EXISTS idx_item_spaces_space ON item_spaces(space_id);
+            PRAGMA user_version = 9;
+            ",
+        )?;
+        Ok(())
+    })();
+
+    match migration {
+        Ok(()) => {
+            connection.execute_batch("COMMIT;")?;
+            Ok(())
+        }
+        Err(error) => {
+            let _ = connection.execute_batch("ROLLBACK;");
+            Err(error)
+        }
+    }
+}
+
 fn column_exists(connection: &Connection, table: &str, column: &str) -> Result<bool> {
     let mut statement = connection.prepare(&format!("PRAGMA table_info({table})"))?;
     let mut rows = statement.query([])?;

@@ -288,6 +288,7 @@ fn resolve_workflow_step(
             note,
             delay_ms,
             condition,
+            env_vars,
         } => WorkflowStep::RunCommand {
             id: id.clone(),
             command: replace_workflow_tokens(command, &variable_map),
@@ -304,6 +305,7 @@ fn resolve_workflow_step(
                 on_false_action: value.on_false_action,
                 jump_to_step_id: value.jump_to_step_id.clone(),
             }),
+            env_vars: env_vars.clone(),
         },
     }
 }
@@ -746,7 +748,7 @@ where
 
 #[cfg(test)]
 mod tests {
-    use std::{cell::RefCell, rc::Rc};
+    use std::{cell::RefCell, collections::HashMap, rc::Rc};
 
     #[cfg(target_os = "windows")]
     use std::{fs, path::Path};
@@ -801,6 +803,7 @@ mod tests {
             note: String::new(),
             delay_ms: 0,
             condition: None,
+            env_vars: HashMap::new(),
         }
     }
 

@@ -3,12 +3,12 @@ import { cn } from '../lib/cn'
 import type { ItemType } from '../types/items'
 
 const TYPE_BADGE_STYLES: Record<ItemType, string> = {
-  app: 'border-[#c9def2] bg-[#E6F1FB] text-[#185FA5]',
-  project: 'border-[#d8d4fb] bg-[#EEEDFE] text-[#534AB7]',
-  url: 'border-[#d4e7bb] bg-[#EAF3DE] text-[#3B6D11]',
-  folder: 'border-[#eddab7] bg-[#FAEEDA] text-[#854F0B]',
-  script: 'border-[#f0d5cb] bg-[#FAECE7] text-[#993C1D]',
-  workflow: 'border-[#d4dfef] bg-[#E8EEF9] text-[#264A7C]',
+  app: 'border-[color:var(--accent)]/25 bg-[color:var(--accent)]/10 text-[color:var(--accent-strong)]',
+  project: 'border-purple-400/25 bg-purple-500/10 text-purple-600 dark:text-purple-400',
+  url: 'border-green-500/25 bg-green-600/10 text-green-700 dark:text-green-400',
+  folder: 'border-amber-500/25 bg-amber-600/10 text-amber-700 dark:text-amber-400',
+  script: 'border-orange-500/25 bg-orange-600/10 text-orange-700 dark:text-orange-400',
+  workflow: 'border-blue-400/25 bg-blue-500/10 text-blue-700 dark:text-blue-400',
 }
 
 interface TypeBadgeProps {

@@ -1,10 +1,14 @@
 import { NavLink } from 'react-router-dom'
+import { Moon, Sun } from 'lucide-react'
 import { NAV_SECTIONS } from '../lib/navigation'
 import { cn } from '../lib/cn'
+import { useItems } from '../hooks/useItems'
 
 export function Sidebar() {
+  const { uiSettings, setTheme } = useItems()
+  const isDark = uiSettings.theme === 'dark'
   return (
-    <aside className="border-b border-[color:var(--border)] bg-[#f3f3f0]/95 backdrop-blur-sm lg:sticky lg:top-0 lg:min-h-screen lg:w-[228px] lg:border-b-0 lg:border-r">
+    <aside className="border-b border-[color:var(--border)] bg-[color:var(--bg)]/95 backdrop-blur-sm lg:sticky lg:top-0 lg:min-h-screen lg:w-[228px] lg:border-b-0 lg:border-r">
       <div className="border-b border-[color:var(--border)] px-4 py-4">
         <div className="flex items-center justify-between gap-3">
           <div>
@@ -15,7 +19,7 @@ export function Sidebar() {
               Desktop Control Center
             </div>
           </div>
-          <span className="rounded-full border border-[color:var(--border)] bg-white px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-[color:var(--text-soft)]">
+          <span className="rounded-full border border-[color:var(--border)] bg-[color:var(--surface)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-[color:var(--text-soft)]">
             Beta
           </span>
         </div>
@@ -35,8 +39,8 @@ export function Sidebar() {
                     cn(
                       'relative flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm transition',
                       isActive
-                        ? 'bg-white text-[color:var(--text)] shadow-[0_8px_20px_rgba(15,23,42,0.04)]'
-                        : 'text-[color:var(--text-muted)] hover:bg-white/75 hover:text-[color:var(--text)]',
+                        ? 'bg-[color:var(--surface)] text-[color:var(--text)] shadow-[0_8px_20px_rgba(15,23,42,0.04)]'
+                        : 'text-[color:var(--text-muted)] hover:bg-[color:var(--surface)]/75 hover:text-[color:var(--text)]',
                     )
                   }
                   end={item.end}
@@ -50,7 +54,7 @@ export function Sidebar() {
                       <span
                         className={cn(
                           'flex h-8 w-8 items-center justify-center rounded-lg transition',
-                          isActive ? 'bg-[#eef5fd] text-[color:var(--accent)]' : 'bg-white/65 text-[color:var(--text-soft)]',
+                          isActive ? 'bg-[color:var(--accent)]/10 text-[color:var(--accent)]' : 'bg-[color:var(--surface)]/65 text-[color:var(--text-soft)]',
                         )}
                       >
                         <item.icon className="h-4 w-4" />
@@ -63,6 +67,19 @@ export function Sidebar() {
             </nav>
           </div>
         ))}
+      </div>
+
+      <div className="border-t border-[color:var(--border)] px-3 py-3">
+        <button
+          className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm text-[color:var(--text-muted)] transition hover:bg-[color:var(--surface)]/75 hover:text-[color:var(--text)]"
+          type="button"
+          onClick={() => setTheme(isDark ? 'light' : 'dark')}
+        >
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[color:var(--surface)]/65 text-[color:var(--text-soft)]">
+            {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </span>
+          <span className="font-medium">{isDark ? '浅色模式' : '深色模式'}</span>
+        </button>
       </div>
 
       <div className="mt-auto hidden border-t border-[color:var(--border)] px-4 py-3 lg:flex lg:items-center lg:gap-3">

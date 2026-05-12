@@ -91,6 +91,7 @@ const fixtureItems: DeskItem[] = [
     createdAt: '2026-03-23T00:00:00Z',
     updatedAt: '2026-03-23T00:00:00Z',
     lastLaunchedAt: null,
+  launchCount: 0,
     projectPath: 'C:\\dev\\deskhub',
     devCommand: 'pnpm dev',
   },
@@ -143,6 +144,7 @@ function materializeItemFromPayload(payload: ItemPayload): DeskItem {
     createdAt: '2026-03-24T00:00:00Z',
     updatedAt: '2026-03-24T00:00:00Z',
     lastLaunchedAt: null,
+  launchCount: 0,
   }
 
   return {
@@ -182,6 +184,7 @@ describe('AppRouter', () => {
       overviewHiddenSections: [],
       overviewLayoutTemplates: [],
       overviewWorkflowLinkMode: 'none',
+      theme: 'light',
     })
     tauriMocks.getCommandHistory.mockResolvedValue({ entries: [] })
     tauriMocks.getDataToolHistory.mockResolvedValue({ records: [] })
@@ -433,6 +436,7 @@ describe('AppRouter', () => {
       overviewHiddenSections: ['workflows'],
       overviewLayoutTemplates: [],
       overviewWorkflowLinkMode: 'prioritize_workflows',
+      theme: 'light',
     })
 
     renderApp(['/overview'])
