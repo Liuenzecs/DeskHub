@@ -131,7 +131,7 @@ export function ProjectDirectoryImportModal({
               </div>
             </div>
 
-            <div className="rounded-xl border border-[color:var(--border)] bg-white px-4 py-3">
+            <div className="rounded-xl border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-3">
               <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[color:var(--text-soft)]">
                 忽略规则
               </div>
@@ -183,7 +183,7 @@ export function ProjectDirectoryImportModal({
                       className={`rounded-xl border px-4 py-3 text-left transition ${
                         selected
                             ? 'border-[color:var(--accent)] bg-[#f4f8fd]'
-                            : 'border-[color:var(--border)] bg-white hover:border-[color:var(--border-strong)]'
+                            : 'border-[color:var(--border)] bg-[color:var(--surface)] hover:border-[color:var(--border-strong)]'
                       }`}
                       disabled={!selectable}
                       type="button"
@@ -234,7 +234,7 @@ export function ProjectDirectoryImportModal({
                               {candidate.detectedFiles.map((fileName) => (
                                 <span
                                   key={`${candidate.path}-${fileName}`}
-                                  className="rounded-md border border-[color:var(--border)] bg-white px-2 py-0.5 text-[10px] text-[color:var(--text-muted)]"
+                                  className="rounded-md border border-[color:var(--border)] bg-[color:var(--surface)] px-2 py-0.5 text-[10px] text-[color:var(--text-muted)]"
                                 >
                                   {fileName}
                                 </span>

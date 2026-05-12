@@ -167,7 +167,7 @@ function MatchHintBadge({
 
   const label = matchKind === 'pinyin' ? '拼音' : '首字母'
   return (
-    <span className="rounded-md border border-[color:var(--border)] bg-white px-2 py-0.5 text-[10px] text-[color:var(--text-muted)]">
+    <span className="rounded-md border border-[color:var(--border)] bg-[color:var(--surface)] px-2 py-0.5 text-[10px] text-[color:var(--text-muted)]">
       {label}
     </span>
   )
@@ -175,7 +175,7 @@ function MatchHintBadge({
 
 function MetaBadge({ label }: { label: string }) {
   return (
-    <span className="rounded-md border border-[color:var(--border)] bg-white px-2 py-0.5 text-[10px] text-[color:var(--text-muted)]">
+    <span className="rounded-md border border-[color:var(--border)] bg-[color:var(--surface)] px-2 py-0.5 text-[10px] text-[color:var(--text-muted)]">
       {label}
     </span>
   )

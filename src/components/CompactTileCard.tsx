@@ -23,7 +23,7 @@ export function CompactTileCard({
 }: CompactTileCardProps) {
   return (
     <article
-      className="group relative flex min-h-[132px] cursor-pointer flex-col gap-3 rounded-2xl border border-[color:var(--border)] bg-white p-3.5 transition hover:-translate-y-0.5 hover:border-[color:var(--border-strong)] hover:bg-[#fcfcfb] hover:shadow-[0_14px_28px_rgba(15,23,42,0.06)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--bg)]"
+      className="group relative flex min-h-[132px] cursor-pointer flex-col gap-3 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-3.5 transition hover:-translate-y-0.5 hover:border-[color:var(--border-strong)] hover:bg-[color:var(--surface-muted)] hover:shadow-[0_14px_28px_rgba(15,23,42,0.06)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--bg)]"
       role="button"
       tabIndex={0}
       onClick={() => onLaunch(item)}

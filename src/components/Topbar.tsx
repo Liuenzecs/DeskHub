@@ -18,7 +18,7 @@ export function Topbar({
     <header className="sticky top-0 z-30 border-b border-[color:var(--border)] bg-[color:var(--surface)]/88 px-3 py-3 backdrop-blur-md lg:px-4">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
         <button
-          className="flex flex-1 items-center gap-3 rounded-2xl border border-[color:var(--border)] bg-[color:var(--bg)] px-3 py-2.5 text-left transition hover:border-[color:var(--border-strong)] hover:bg-white"
+          className="flex flex-1 items-center gap-3 rounded-2xl border border-[color:var(--border)] bg-[color:var(--bg)] px-3 py-2.5 text-left transition hover:border-[color:var(--border-strong)] hover:bg-[color:var(--surface)]"
           type="button"
           onClick={onOpenSearch}
         >

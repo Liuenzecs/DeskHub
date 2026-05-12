@@ -52,7 +52,7 @@ export function SearchBar({
           当前页筛选
         </span>
         {typeof resultCount === 'number' ? (
-          <span className="rounded-lg border border-[color:var(--border)] bg-white px-2.5 py-1 text-[11px] font-medium text-[color:var(--text-muted)]">
+          <span className="rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-2.5 py-1 text-[11px] font-medium text-[color:var(--text-muted)]">
             {resultCount} 条结果
           </span>
         ) : null}

@@ -205,7 +205,7 @@ export function OverviewPage() {
                 />
               ))}
               <button
-                className="flex min-h-[132px] flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-[color:var(--border-strong)] bg-white text-[color:var(--text-muted)] transition hover:border-[color:var(--accent)] hover:text-[color:var(--accent)]"
+                className="flex min-h-[132px] flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-[color:var(--border-strong)] bg-[color:var(--surface)] text-[color:var(--text-muted)] transition hover:border-[color:var(--accent)] hover:text-[color:var(--accent)]"
                 type="button"
                 onClick={() => {
                   setEditingItem(null)
@@ -269,11 +269,11 @@ export function OverviewPage() {
             {libraryRoutes.map((entry) => (
               <Link
                 key={entry.route}
-                className="surface-muted flex items-center justify-between gap-3 px-4 py-3 transition hover:border-[color:var(--accent)] hover:bg-white"
+                className="surface-muted flex items-center justify-between gap-3 px-4 py-3 transition hover:border-[color:var(--accent)] hover:bg-[color:var(--surface)]"
                 to={entry.route}
               >
                 <div className="flex items-center gap-3">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-[color:var(--text-soft)]">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[color:var(--surface)] text-[color:var(--text-soft)]">
                     {entry.icon ? <entry.icon className="h-4 w-4" /> : null}
                   </span>
                   <div>
@@ -305,10 +305,10 @@ export function OverviewPage() {
             把应用、项目、网站、文件夹和工作流收进一个高密度控制台里，减少切换成本。
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
-            <span className="rounded-full border border-[color:var(--border)] bg-white px-3 py-1 text-xs text-[color:var(--text-muted)]">
+            <span className="rounded-full border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-1 text-xs text-[color:var(--text-muted)]">
               当前布局：{activeOverviewLayout.title}
             </span>
-            <span className="rounded-full border border-[color:var(--border)] bg-white px-3 py-1 text-xs text-[color:var(--text-muted)]">
+            <span className="rounded-full border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-1 text-xs text-[color:var(--text-muted)]">
               联动策略：{OVERVIEW_WORKFLOW_LINK_MODE_LABELS[uiSettings.overviewWorkflowLinkMode]}
             </span>
             {defaultWorkflow ? (
@@ -316,7 +316,7 @@ export function OverviewPage() {
                 默认工作流：{defaultWorkflow.name}
               </span>
             ) : (
-              <span className="rounded-full border border-[color:var(--border)] bg-white px-3 py-1 text-xs text-[color:var(--text-soft)]">
+              <span className="rounded-full border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-1 text-xs text-[color:var(--text-soft)]">
                 尚未设置默认工作流
               </span>
             )}

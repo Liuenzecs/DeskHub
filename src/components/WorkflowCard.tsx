@@ -214,7 +214,7 @@ export function WorkflowCard({
         <div className="flex flex-wrap items-center gap-2">
           {previewSteps.map((step, index) => (
             <div key={step.id} className="contents">
-              <div className="min-w-0 rounded-xl border border-[color:var(--border)] bg-white px-2.5 py-2 text-[11px] text-[color:var(--text-muted)] shadow-[0_2px_8px_rgba(15,23,42,0.03)]">
+              <div className="min-w-0 rounded-xl border border-[color:var(--border)] bg-[color:var(--surface)] px-2.5 py-2 text-[11px] text-[color:var(--text-muted)] shadow-[0_2px_8px_rgba(15,23,42,0.03)]">
                 <div className="mb-1 flex items-center gap-2">
                   <span className="rounded-md bg-[color:var(--surface-muted)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-[color:var(--text-soft)]">
                     {index + 1}

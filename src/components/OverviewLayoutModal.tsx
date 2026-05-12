@@ -217,7 +217,7 @@ export function OverviewLayoutModal({
                   先套用一个总览模板，再按你的习惯细调区块顺序和显隐。
                 </div>
               </div>
-              <div className="rounded-full border border-[color:var(--border)] bg-white px-3 py-1 text-xs text-[color:var(--text-muted)]">
+              <div className="rounded-full border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-1 text-xs text-[color:var(--text-muted)]">
                 当前：{activeLayout.title}
               </div>
             </div>
@@ -232,7 +232,7 @@ export function OverviewLayoutModal({
                     className={`rounded-2xl border px-4 py-4 text-left transition ${
                       selected
                         ? 'border-[color:var(--accent)] bg-[#f4f8fd] shadow-[0_12px_24px_rgba(55,138,221,0.08)]'
-                        : 'border-[color:var(--border)] bg-white hover:border-[color:var(--border-strong)] hover:bg-[#fcfcfb]'
+                        : 'border-[color:var(--border)] bg-[color:var(--surface)] hover:border-[color:var(--border-strong)] hover:bg-[color:var(--surface-muted)]'
                     }`}
                     type="button"
                     onClick={() => {
@@ -245,7 +245,7 @@ export function OverviewLayoutModal({
                         <span
                           className={`rounded-xl p-2 ${
                             selected
-                              ? 'bg-white text-[color:var(--accent)]'
+                              ? 'bg-[color:var(--surface)] text-[color:var(--accent)]'
                               : 'bg-[color:var(--surface-muted)] text-[color:var(--text-muted)]'
                           }`}
                         >
@@ -254,7 +254,7 @@ export function OverviewLayoutModal({
                         <div className="text-sm font-semibold text-[color:var(--text)]">{preset.title}</div>
                       </div>
                       {selected ? (
-                        <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-[color:var(--accent)]">
+                        <span className="rounded-full bg-[color:var(--surface)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-[color:var(--accent)]">
                           当前
                         </span>
                       ) : null}
@@ -269,7 +269,7 @@ export function OverviewLayoutModal({
                           className={`rounded-full border px-2 py-1 text-[11px] ${
                             preset.hiddenSections.includes(sectionId)
                               ? 'border-[color:var(--border)] bg-[color:var(--surface-muted)] text-[color:var(--text-soft)]'
-                              : 'border-[#d8e4f4] bg-white text-[color:var(--text-muted)]'
+                              : 'border-[#d8e4f4] bg-[color:var(--surface)] text-[color:var(--text-muted)]'
                           }`}
                         >
                           {OVERVIEW_SECTION_LABELS[sectionId]}
@@ -293,7 +293,7 @@ export function OverviewLayoutModal({
                   把当前区块顺序和显隐保存为命名快照，之后可以快速复用。
                 </div>
               </div>
-              <div className="rounded-full border border-[color:var(--border)] bg-white px-3 py-1 text-xs text-[color:var(--text-muted)]">
+              <div className="rounded-full border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-1 text-xs text-[color:var(--text-muted)]">
                 已保存 {draftLayoutTemplates.length} 个
               </div>
             </div>
@@ -328,7 +328,7 @@ export function OverviewLayoutModal({
                       className={`rounded-2xl border px-4 py-4 transition ${
                         selected
                           ? 'border-[color:var(--accent)] bg-[#f4f8fd]'
-                          : 'border-[color:var(--border)] bg-white'
+                          : 'border-[color:var(--border)] bg-[color:var(--surface)]'
                       }`}
                     >
                       <div className="flex items-start justify-between gap-3">
@@ -357,7 +357,7 @@ export function OverviewLayoutModal({
                             className={`rounded-full border px-2 py-1 text-[11px] ${
                               layoutTemplate.hiddenSections.includes(sectionId)
                                 ? 'border-[color:var(--border)] bg-[color:var(--surface-muted)] text-[color:var(--text-soft)]'
-                                : 'border-[#d8e4f4] bg-white text-[color:var(--text-muted)]'
+                                : 'border-[#d8e4f4] bg-[color:var(--surface)] text-[color:var(--text-muted)]'
                             }`}
                           >
                             {OVERVIEW_SECTION_LABELS[sectionId]}
@@ -384,7 +384,7 @@ export function OverviewLayoutModal({
                 })}
               </div>
             ) : (
-              <div className="mt-4 rounded-2xl border border-dashed border-[color:var(--border)] bg-white px-4 py-4 text-sm text-[color:var(--text-muted)]">
+              <div className="mt-4 rounded-2xl border border-dashed border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-4 text-sm text-[color:var(--text-muted)]">
                 还没有保存过命名模板。先调好区块顺序，再把当前布局存成一个快照。
               </div>
             )}
@@ -404,7 +404,7 @@ export function OverviewLayoutModal({
                 className={`rounded-full px-3 py-1 text-xs ${
                   hasDefaultWorkflow
                     ? 'border border-[#d9e7c0] bg-[#f3f9e9] text-[color:var(--ready)]'
-                    : 'border border-[color:var(--border)] bg-white text-[color:var(--text-soft)]'
+                    : 'border border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--text-soft)]'
                 }`}
               >
                 {hasDefaultWorkflow ? '已检测到默认工作流' : '当前未设置默认工作流'}
@@ -425,7 +425,7 @@ export function OverviewLayoutModal({
                     className={`flex cursor-pointer items-start gap-3 rounded-2xl border px-4 py-4 ${
                       selected
                         ? 'border-[color:var(--accent)] bg-[#f4f8fd]'
-                        : 'border-[color:var(--border)] bg-white'
+                        : 'border-[color:var(--border)] bg-[color:var(--surface)]'
                     }`}
                   >
                     <input
@@ -484,7 +484,7 @@ export function OverviewLayoutModal({
                 return (
                   <div
                     key={sectionId}
-                    className="flex items-center gap-3 rounded-2xl border border-[color:var(--border)] bg-white px-4 py-3"
+                    className="flex items-center gap-3 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-3"
                   >
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">

@@ -287,12 +287,12 @@ function OperationCard({
       type="button"
       onClick={onClick}
     >
-      <div className="rounded-lg bg-white p-2 text-[color:var(--accent)]">{icon}</div>
+      <div className="rounded-lg bg-[color:var(--surface)] p-2 text-[color:var(--accent)]">{icon}</div>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <div className="text-sm font-semibold text-[color:var(--text)]">{title}</div>
           {busy ? (
-            <span className="rounded-md border border-[color:var(--border)] bg-white px-2 py-0.5 text-[11px] text-[color:var(--text-muted)]">
+            <span className="rounded-md border border-[color:var(--border)] bg-[color:var(--surface)] px-2 py-0.5 text-[11px] text-[color:var(--text-muted)]">
               处理中
             </span>
           ) : null}
@@ -375,7 +375,7 @@ function ExtraMetadata({ extra }: { extra: DataToolHistoryExtra }) {
             {tableEntries.map(([table, count]) => (
               <div
                 key={table}
-                className="rounded-lg border border-[color:var(--border)] bg-white px-3 py-2 text-sm text-[color:var(--text-muted)]"
+                className="rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-2 text-sm text-[color:var(--text-muted)]"
               >
                 <span className="font-medium text-[color:var(--text)]">{table}</span>
                 <span className="ml-2">{count}</span>
@@ -451,7 +451,7 @@ function LatestResultPanel({
             错误与问题详情
           </summary>
           <div className="mt-3 grid gap-3">
-            <div className="max-h-52 overflow-y-auto rounded-lg border border-[color:var(--border)] bg-white px-3 py-2">
+            <div className="max-h-52 overflow-y-auto rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-2">
               <div className="grid gap-2 text-sm text-[color:var(--text-muted)]">
                 {record.errors.map((error, index) => (
                   <div key={`${record.id}-error-${index}`}>{error}</div>
@@ -617,18 +617,18 @@ function ImportPreviewPanel({
                 {preview.items.map((item) => (
                   <div
                     key={`${item.index}-${item.name}`}
-                    className="rounded-lg border border-[color:var(--border)] bg-white px-3 py-3"
+                    className="rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-3"
                   >
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="rounded-md bg-[color:var(--surface-muted)] px-2 py-0.5 text-[10px] font-medium text-[color:var(--text-muted)]">
                         #{item.index}
                       </span>
                       <span className="text-sm font-medium text-[color:var(--text)]">{item.name}</span>
-                      <span className="rounded-md border border-[color:var(--border)] bg-white px-2 py-0.5 text-[10px] text-[color:var(--text-muted)]">
+                      <span className="rounded-md border border-[color:var(--border)] bg-[color:var(--surface)] px-2 py-0.5 text-[10px] text-[color:var(--text-muted)]">
                         {ITEM_TYPE_LABELS[item.type]}
                       </span>
                       {typeof item.stepCount === 'number' ? (
-                        <span className="rounded-md border border-[color:var(--border)] bg-white px-2 py-0.5 text-[10px] text-[color:var(--text-muted)]">
+                        <span className="rounded-md border border-[color:var(--border)] bg-[color:var(--surface)] px-2 py-0.5 text-[10px] text-[color:var(--text-muted)]">
                           {item.stepCount} 步
                         </span>
                       ) : null}
@@ -663,7 +663,7 @@ function ImportPreviewPanel({
                     导出错误列表
                   </button>
                 </div>
-                <div className="max-h-44 overflow-y-auto rounded-lg border border-[color:var(--border)] bg-white px-3 py-2 text-sm text-[color:var(--text-muted)]">
+                <div className="max-h-44 overflow-y-auto rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-2 text-sm text-[color:var(--text-muted)]">
                   <div className="grid gap-2">
                     {preview.errors.map((error, index) => (
                       <div key={`preview-error-${index}`}>{error}</div>
@@ -1775,7 +1775,7 @@ export function DataToolsModal({ open, onClose }: DataToolsModalProps) {
                   <div className="text-sm text-[color:var(--text-muted)]">
                     下一次扫描会记住最近工作区、深度、忽略规则和冲突策略。
                   </div>
-                  <div className="rounded-lg border border-[color:var(--border)] bg-white px-3 py-3 text-sm text-[color:var(--text-muted)]">
+                  <div className="rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-3 text-sm text-[color:var(--text-muted)]">
                     <div className="font-medium text-[color:var(--text)]">最近工作区</div>
                     <div className="mt-1 break-all">
                       {projectImportPreferences.recentRootPath ?? '尚未选择过工作区'}

@@ -104,7 +104,7 @@ export function BrowserBookmarkImportModal({
                 </div>
                 <div className="grid gap-2 md:grid-cols-2">
                   {scan.sources.map((source) => (
-                    <div key={source.id} className="rounded-xl border border-[color:var(--border)] bg-white px-4 py-3">
+                    <div key={source.id} className="rounded-xl border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-3">
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="rounded-md border border-[color:var(--border)] bg-[color:var(--surface-muted)] px-2 py-0.5 text-[10px] text-[color:var(--text-muted)]">
                           {source.browser}
@@ -153,7 +153,7 @@ export function BrowserBookmarkImportModal({
                         className={`rounded-xl border px-4 py-3 text-left transition ${
                           selected
                             ? 'border-[color:var(--accent)] bg-[#f4f8fd]'
-                            : 'border-[color:var(--border)] bg-white hover:border-[color:var(--border-strong)]'
+                            : 'border-[color:var(--border)] bg-[color:var(--surface)] hover:border-[color:var(--border-strong)]'
                         }`}
                         disabled={!importable}
                         type="button"
@@ -203,7 +203,7 @@ export function BrowserBookmarkImportModal({
                   })}
                 </div>
               ) : (
-                <div className="rounded-xl border border-dashed border-[color:var(--border)] bg-white px-4 py-6 text-sm text-[color:var(--text-muted)]">
+                <div className="rounded-xl border border-dashed border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-6 text-sm text-[color:var(--text-muted)]">
                   没有扫描到可导入的 Chrome / Edge 收藏夹网址。
                 </div>
               )}

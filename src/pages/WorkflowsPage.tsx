@@ -232,7 +232,7 @@ export function WorkflowsPage() {
       <SearchBar
         actions={
           <div className="flex flex-wrap items-center gap-2">
-            <label className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white px-2.5 py-1.5 text-xs font-medium text-[color:var(--text-muted)]">
+            <label className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-[color:var(--surface)] px-2.5 py-1.5 text-xs font-medium text-[color:var(--text-muted)]">
               <ArrowUpDown className="h-3.5 w-3.5" />
               <select
                 aria-label="工作流排序"
@@ -263,7 +263,7 @@ export function WorkflowsPage() {
               className={`inline-flex items-center gap-2 rounded-xl border px-2.5 py-1.5 text-xs font-medium transition ${
                 selectionMode
                   ? 'border-[color:var(--accent)] bg-[#f4f8fd] text-[color:var(--accent)]'
-                  : 'border-[color:var(--border)] bg-white text-[color:var(--text-muted)] hover:border-[color:var(--border-strong)]'
+                  : 'border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--text-muted)] hover:border-[color:var(--border-strong)]'
               }`}
               type="button"
               onClick={() => (selectionMode ? clearSelectionMode() : setSelectionMode(true))}
@@ -289,7 +289,7 @@ export function WorkflowsPage() {
           {WORKFLOW_TEMPLATES.map((template) => (
             <button
               key={template.id}
-              className="surface-muted flex flex-col items-start gap-2 px-4 py-4 text-left transition hover:-translate-y-[1px] hover:border-[color:var(--accent)] hover:bg-white hover:shadow-[0_12px_24px_rgba(15,23,42,0.04)]"
+              className="surface-muted flex flex-col items-start gap-2 px-4 py-4 text-left transition hover:-translate-y-[1px] hover:border-[color:var(--accent)] hover:bg-[color:var(--surface)] hover:shadow-[0_12px_24px_rgba(15,23,42,0.04)]"
               type="button"
               onClick={() => {
                 setEditingWorkflow(null)

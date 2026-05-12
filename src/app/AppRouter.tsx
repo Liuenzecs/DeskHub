@@ -21,6 +21,9 @@ const NotesPage = lazy(() =>
 const SpacesPage = lazy(() =>
   import('../pages/SpacesPage').then((module) => ({ default: module.SpacesPage })),
 )
+const HelpPage = lazy(() =>
+  import('../pages/HelpPage').then((module) => ({ default: module.HelpPage })),
+)
 
 function RouteFallback() {
   return (
@@ -85,6 +88,14 @@ export function AppRouter() {
             </Suspense>
           }
           path="spaces"
+        />
+        <Route
+          element={
+            <Suspense fallback={<RouteFallback />}>
+              <HelpPage />
+            </Suspense>
+          }
+          path="help"
         />
       </Route>
       <Route element={<Navigate replace to="/overview" />} path="*" />

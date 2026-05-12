@@ -49,7 +49,7 @@ export function TagFilterMenu({ tags, selectedTags, onToggleTag, onClear }: TagF
           'inline-flex items-center gap-2 rounded-xl border px-2.5 py-1.5 text-xs font-medium transition',
           selectedTags.length
             ? 'border-[color:var(--accent)] bg-[#f4f8fd] text-[color:var(--accent)]'
-            : 'border-[color:var(--border)] bg-white text-[color:var(--text-muted)] hover:border-[color:var(--border-strong)]',
+            : 'border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--text-muted)] hover:border-[color:var(--border-strong)]',
         )}
         type="button"
         onClick={() => setOpen((current) => !current)}
@@ -57,7 +57,7 @@ export function TagFilterMenu({ tags, selectedTags, onToggleTag, onClear }: TagF
         <Funnel className="h-3.5 w-3.5" />
         标签
         {selectedTags.length ? (
-          <span className="rounded bg-white px-1.5 py-0.5 text-[10px] text-[color:var(--accent)]">
+          <span className="rounded bg-[color:var(--surface)] px-1.5 py-0.5 text-[10px] text-[color:var(--accent)]">
             {selectedTags.length}
           </span>
         ) : null}
@@ -66,7 +66,7 @@ export function TagFilterMenu({ tags, selectedTags, onToggleTag, onClear }: TagF
       {open ? (
         <div
           aria-label="标签筛选"
-          className="absolute right-0 top-[calc(100%+8px)] z-20 w-72 rounded-2xl border border-[color:var(--border)] bg-white p-3 shadow-[0_18px_44px_rgba(15,23,42,0.08)]"
+          className="absolute right-0 top-[calc(100%+8px)] z-20 w-72 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-3 shadow-[0_18px_44px_rgba(15,23,42,0.08)]"
           id={panelId}
           role="dialog"
         >
@@ -110,7 +110,7 @@ export function TagFilterMenu({ tags, selectedTags, onToggleTag, onClear }: TagF
                       'inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs transition',
                       active
                         ? 'border-[color:var(--accent)] bg-[#f4f8fd] text-[color:var(--accent)]'
-                        : 'border-[color:var(--border)] bg-[color:var(--surface-muted)] text-[color:var(--text-muted)] hover:border-[color:var(--border-strong)] hover:bg-white',
+                        : 'border-[color:var(--border)] bg-[color:var(--surface-muted)] text-[color:var(--text-muted)] hover:border-[color:var(--border-strong)] hover:bg-[color:var(--surface)]',
                     )}
                     type="button"
                     onClick={() => onToggleTag(tag)}

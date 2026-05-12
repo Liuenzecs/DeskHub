@@ -15,7 +15,8 @@
       "Bash(node scripts/generate-pinyin-data.mjs)",
       "Bash(npm uninstall *)",
       "Bash(gh release *)",
-      "Bash(start \"\" \"C:\\\\Users\\\\realfeeling1\\\\DeskHub\\\\src-tauri\\\\target\\\\release\\\\bundle\\\\nsis\\\\DeskHub_0.3.0_x64-setup.exe\" /S)"
+      "Bash(start \"\" \"C:\\\\Users\\\\realfeeling1\\\\DeskHub\\\\src-tauri\\\\target\\\\release\\\\bundle\\\\nsis\\\\DeskHub_0.3.0_x64-setup.exe\" /S)",
+      "Bash(xargs sed *)"
     ]
   }
 }

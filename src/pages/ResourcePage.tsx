@@ -211,7 +211,7 @@ export function ResourcePage({ config }: ResourcePageProps) {
       <SearchBar
         actions={
           <div className="flex flex-wrap items-center gap-2">
-            <label className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white px-2.5 py-1.5 text-xs font-medium text-[color:var(--text-muted)]">
+            <label className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-[color:var(--surface)] px-2.5 py-1.5 text-xs font-medium text-[color:var(--text-muted)]">
               <ArrowUpDown className="h-3.5 w-3.5" />
               <select
                 aria-label={`${config.title}排序`}
@@ -242,7 +242,7 @@ export function ResourcePage({ config }: ResourcePageProps) {
               className={`inline-flex items-center gap-2 rounded-xl border px-2.5 py-1.5 text-xs font-medium transition ${
                 selectionMode
                   ? 'border-[color:var(--accent)] bg-[#f4f8fd] text-[color:var(--accent)]'
-                  : 'border-[color:var(--border)] bg-white text-[color:var(--text-muted)] hover:border-[color:var(--border-strong)]'
+                  : 'border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--text-muted)] hover:border-[color:var(--border-strong)]'
               }`}
               type="button"
               onClick={() => (selectionMode ? clearSelectionMode() : setSelectionMode(true))}

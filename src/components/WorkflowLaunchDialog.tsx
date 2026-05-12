@@ -119,7 +119,7 @@ export function WorkflowLaunchDialog({
               </select>
             </div>
 
-            <div className="rounded-2xl border border-[color:var(--border)] bg-white px-4 py-3">
+            <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-3">
               <div className="text-sm font-semibold text-[color:var(--text)]">
                 本次将执行 {remainingSteps.length} / {workflow.steps.length} 步
               </div>
@@ -198,22 +198,22 @@ export function WorkflowLaunchDialog({
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="rounded-xl bg-white p-2 text-[color:var(--accent)]">
+                        <span className="rounded-xl bg-[color:var(--surface)] p-2 text-[color:var(--accent)]">
                           <StepIcon step={step} />
                         </span>
                         <span className="text-xs font-semibold uppercase tracking-[0.08em] text-[color:var(--text-soft)]">
                           Step {index + 1}
                         </span>
-                        <span className="rounded-md border border-[color:var(--border)] bg-white px-2 py-0.5 text-[11px] font-medium text-[color:var(--text-muted)]">
+                        <span className="rounded-md border border-[color:var(--border)] bg-[color:var(--surface)] px-2 py-0.5 text-[11px] font-medium text-[color:var(--text-muted)]">
                           {WORKFLOW_STEP_LABELS[step.type]}
                         </span>
                         {step.type === 'run_command' ? (
-                          <span className="rounded-md border border-[color:var(--border)] bg-white px-2 py-0.5 text-[11px] text-[color:var(--text-muted)]">
+                          <span className="rounded-md border border-[color:var(--border)] bg-[color:var(--surface)] px-2 py-0.5 text-[11px] text-[color:var(--text-muted)]">
                             {EXECUTION_MODE_LABELS[step.executionMode]}
                           </span>
                         ) : null}
                         {step.delayMs > 0 ? (
-                          <span className="inline-flex items-center gap-1 rounded-md border border-[color:var(--border)] bg-white px-2 py-0.5 text-[11px] text-[color:var(--text-muted)]">
+                          <span className="inline-flex items-center gap-1 rounded-md border border-[color:var(--border)] bg-[color:var(--surface)] px-2 py-0.5 text-[11px] text-[color:var(--text-muted)]">
                             <Clock3 className="h-3 w-3" />
                             延迟 {formatDelayMs(step.delayMs)}
                           </span>
@@ -231,8 +231,8 @@ export function WorkflowLaunchDialog({
                     <span
                       className={`rounded-md px-2 py-1 text-xs ${
                         isMuted
-                          ? 'bg-white text-[color:var(--text-soft)]'
-                          : 'bg-white text-[color:var(--accent)]'
+                          ? 'bg-[color:var(--surface)] text-[color:var(--text-soft)]'
+                          : 'bg-[color:var(--surface)] text-[color:var(--accent)]'
                       }`}
                     >
                       {isMuted ? '本次跳过' : '本次执行'}

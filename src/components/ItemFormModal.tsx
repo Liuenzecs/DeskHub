@@ -1016,7 +1016,7 @@ export function ItemFormModal({
                 </select>
               </div>
 
-              <label className="flex items-center gap-3 rounded-lg border border-[color:var(--border)] bg-white px-3 py-2.5 text-sm text-[color:var(--text)]">
+              <label className="flex items-center gap-3 rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-2.5 text-sm text-[color:var(--text)]">
                 <input
                   checked={values.favorite}
                   className="h-4 w-4 rounded border-slate-300"
@@ -1043,13 +1043,13 @@ export function ItemFormModal({
                 <label className="field-label" htmlFor="tag-input">
                   标签
                 </label>
-                <div className="rounded-lg border border-[color:var(--border)] bg-white px-3 py-2">
+                <div className="rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-2">
                   {tagChips.length ? (
                     <div className="mb-2 flex flex-wrap gap-2">
                       {tagChips.map((tag) => (
                         <button
                           key={tag}
-                          className="inline-flex items-center gap-1 rounded-full border border-[color:var(--border)] bg-[color:var(--surface-muted)] px-2.5 py-1 text-xs text-[color:var(--text-muted)] transition hover:border-[color:var(--border-strong)] hover:bg-white"
+                          className="inline-flex items-center gap-1 rounded-full border border-[color:var(--border)] bg-[color:var(--surface-muted)] px-2.5 py-1 text-xs text-[color:var(--text-muted)] transition hover:border-[color:var(--border-strong)] hover:bg-[color:var(--surface)]"
                           type="button"
                           onClick={() => removeTag(tag)}
                         >
@@ -1080,7 +1080,7 @@ export function ItemFormModal({
                     {recommendedTags.map((tag) => (
                       <button
                         key={tag}
-                        className="rounded-full border border-[color:var(--border)] bg-[color:var(--surface-muted)] px-2.5 py-1 text-xs text-[color:var(--text-muted)] transition hover:border-[color:var(--accent)] hover:bg-white hover:text-[color:var(--accent)]"
+                        className="rounded-full border border-[color:var(--border)] bg-[color:var(--surface-muted)] px-2.5 py-1 text-xs text-[color:var(--text-muted)] transition hover:border-[color:var(--accent)] hover:bg-[color:var(--surface)] hover:text-[color:var(--accent)]"
                         type="button"
                         onClick={() => addTag(tag)}
                       >
@@ -1095,7 +1095,7 @@ export function ItemFormModal({
                 <label className="field-label" htmlFor="icon">
                   图标
                 </label>
-                <div className="grid gap-3 rounded-lg border border-[color:var(--border)] bg-white px-3 py-3">
+                <div className="grid gap-3 rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-3">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
                       <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[color:var(--surface-muted)] text-[color:var(--text-muted)]">
@@ -1146,7 +1146,7 @@ export function ItemFormModal({
                               'group flex items-center justify-center rounded-lg border px-2 py-2 transition',
                               normalizedIconValue === option.key
                                 ? 'border-[color:var(--accent)] bg-[#f5f9ff] text-[color:var(--accent)]'
-                                : 'border-[color:var(--border)] bg-[color:var(--surface-muted)] text-[color:var(--text-muted)] hover:border-[color:var(--border-strong)] hover:bg-white',
+                                : 'border-[color:var(--border)] bg-[color:var(--surface-muted)] text-[color:var(--text-muted)] hover:border-[color:var(--border-strong)] hover:bg-[color:var(--surface)]',
                             )}
                             title={option.label}
                             type="button"
@@ -1173,12 +1173,12 @@ export function ItemFormModal({
                             'group flex flex-col items-center gap-2 rounded-lg border px-2 py-3 text-center transition',
                             selected
                               ? 'border-[color:var(--accent)] bg-[#f5f9ff] text-[color:var(--accent)]'
-                              : 'border-[color:var(--border)] bg-[color:var(--surface-muted)] text-[color:var(--text-muted)] hover:border-[color:var(--border-strong)] hover:bg-white',
+                              : 'border-[color:var(--border)] bg-[color:var(--surface-muted)] text-[color:var(--text-muted)] hover:border-[color:var(--border-strong)] hover:bg-[color:var(--surface)]',
                           )}
                           type="button"
                           onClick={() => handleIconSelect(option.key)}
                         >
-                          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[color:var(--surface)]">
                             <option.icon className="h-4.5 w-4.5" />
                           </span>
                           <span className="text-[11px] font-medium leading-4">{option.label}</span>
@@ -1224,7 +1224,7 @@ export function ItemFormModal({
             </div>
 
             {!item && values.type !== 'workflow' ? (
-              <div className="mb-4 rounded-lg border border-[color:var(--border)] bg-white p-4">
+              <div className="mb-4 rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] p-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <h3 className="text-sm font-semibold text-[color:var(--text)]">快速模板</h3>
@@ -1237,7 +1237,7 @@ export function ItemFormModal({
                   {getItemStarterTemplates(values.type).map((template) => (
                     <button
                       key={template.id}
-                      className="rounded-lg border border-[color:var(--border)] bg-[color:var(--surface-muted)] px-3 py-3 text-left transition hover:border-[color:var(--accent)] hover:bg-white"
+                      className="rounded-lg border border-[color:var(--border)] bg-[color:var(--surface-muted)] px-3 py-3 text-left transition hover:border-[color:var(--accent)] hover:bg-[color:var(--surface)]"
                       type="button"
                       onClick={() => applyStarterTemplate(template.id)}
                     >
@@ -1311,7 +1311,7 @@ export function ItemFormModal({
                 </div>
 
                 {hasProjectInspectionInfo ? (
-                  <div className="md:col-span-2 rounded-lg border border-[color:var(--border)] bg-white px-4 py-3">
+                  <div className="md:col-span-2 rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-3">
                     <div className="text-xs font-semibold uppercase tracking-[0.08em] text-[color:var(--text-soft)]">
                       项目识别建议
                     </div>
@@ -1362,7 +1362,7 @@ export function ItemFormModal({
                                   'rounded-full border px-3 py-1.5 text-xs transition',
                                   selected
                                     ? 'border-[color:var(--accent)] bg-[#f4f8fd] text-[color:var(--accent)]'
-                                    : 'border-[color:var(--border)] bg-[color:var(--surface-muted)] text-[color:var(--text-muted)] hover:border-[color:var(--accent)] hover:bg-white hover:text-[color:var(--accent)]',
+                                    : 'border-[color:var(--border)] bg-[color:var(--surface-muted)] text-[color:var(--text-muted)] hover:border-[color:var(--accent)] hover:bg-[color:var(--surface)] hover:text-[color:var(--accent)]',
                                 )}
                                 type="button"
                                 onClick={() => handleValueChange('devCommand', commandSuggestion)}
@@ -1470,7 +1470,7 @@ export function ItemFormModal({
             {values.type === 'workflow' ? (
               <div className="grid gap-4">
                 {!item ? (
-                  <div className="rounded-lg border border-[color:var(--border)] bg-white p-4">
+                  <div className="rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] p-4">
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div>
                         <h3 className="text-sm font-semibold text-[color:var(--text)]">从模板开始</h3>
@@ -1483,7 +1483,7 @@ export function ItemFormModal({
                       {WORKFLOW_TEMPLATES.map((template) => (
                         <button
                           key={template.id}
-                          className="rounded-lg border border-[color:var(--border)] bg-[color:var(--surface-muted)] px-3 py-3 text-left transition hover:border-[color:var(--accent)] hover:bg-white"
+                          className="rounded-lg border border-[color:var(--border)] bg-[color:var(--surface-muted)] px-3 py-3 text-left transition hover:border-[color:var(--accent)] hover:bg-[color:var(--surface)]"
                           type="button"
                           onClick={() => applyWorkflowTemplate(template.id)}
                         >
@@ -1495,7 +1495,7 @@ export function ItemFormModal({
                   </div>
                 ) : null}
 
-                <div className="rounded-lg border border-[color:var(--border)] bg-white p-4">
+                <div className="rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] p-4">
                   <div className="flex items-center justify-between gap-3">
                     <div>
                       <h3 className="text-sm font-semibold text-[color:var(--text)]">工作流变量</h3>
@@ -1602,7 +1602,7 @@ export function ItemFormModal({
                               <p className="mt-2 text-xs text-[color:var(--text-soft)]">
                                 占位符：
                                 {' '}
-                                <code className="rounded bg-white px-1 py-0.5 text-[11px]">
+                                <code className="rounded bg-[color:var(--surface)] px-1 py-0.5 text-[11px]">
                                   {getWorkflowVariablePlaceholder(variable)}
                                 </code>
                               </p>
@@ -1627,7 +1627,7 @@ export function ItemFormModal({
                                 />
                               </div>
 
-                              <label className="flex items-center gap-3 rounded-lg border border-[color:var(--border)] bg-white px-3 py-2.5 text-sm text-[color:var(--text)]">
+                              <label className="flex items-center gap-3 rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-2.5 text-sm text-[color:var(--text)]">
                                 <input
                                   checked={variable.required}
                                   className="h-4 w-4 rounded border-slate-300"
@@ -1673,7 +1673,7 @@ export function ItemFormModal({
                 </div>
 
                 {values.steps.map((step, index) => (
-                  <div key={step.id} className="rounded-lg border border-[color:var(--border)] bg-white p-4">
+                  <div key={step.id} className="rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] p-4">
                     <div className="mb-3 flex items-center justify-between gap-3">
                       <div>
                         <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[color:var(--text-soft)]">
@@ -1990,7 +1990,7 @@ export function ItemFormModal({
                                 </div>
 
                                 {step.condition.operator === 'is_empty' || step.condition.operator === 'not_empty' ? (
-                                  <div className="rounded-lg border border-dashed border-[color:var(--border)] bg-white px-3 py-2 text-sm text-[color:var(--text-soft)]">
+                                  <div className="rounded-lg border border-dashed border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-2 text-sm text-[color:var(--text-soft)]">
                                     当前条件不需要填写比较值。
                                   </div>
                                 ) : (
@@ -2060,14 +2060,14 @@ export function ItemFormModal({
                                     </select>
                                   </div>
                                 ) : (
-                                  <div className="rounded-lg border border-dashed border-[color:var(--border)] bg-white px-3 py-2 text-sm text-[color:var(--text-soft)]">
+                                  <div className="rounded-lg border border-dashed border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-2 text-sm text-[color:var(--text-soft)]">
                                     当前会直接跳过此步骤，继续执行后续流程。
                                   </div>
                                 )}
                               </div>
                             </div>
                           ) : (
-                            <div className="mt-3 rounded-lg border border-dashed border-[color:var(--border)] bg-white px-3 py-2 text-sm text-[color:var(--text-soft)]">
+                            <div className="mt-3 rounded-lg border border-dashed border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-2 text-sm text-[color:var(--text-soft)]">
                               关闭后，该步骤会始终按顺序执行。
                             </div>
                           )}

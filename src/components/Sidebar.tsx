@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { Moon, Sun } from 'lucide-react'
+import { HelpCircle, Moon, Sun } from 'lucide-react'
 import { NAV_SECTIONS } from '../lib/navigation'
 import { cn } from '../lib/cn'
 import { useItems } from '../hooks/useItems'
@@ -70,6 +70,15 @@ export function Sidebar() {
       </div>
 
       <div className="border-t border-[color:var(--border)] px-3 py-3">
+        <NavLink
+          className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm text-[color:var(--text-muted)] transition hover:bg-[color:var(--surface)]/75 hover:text-[color:var(--text)]"
+          to="/help"
+        >
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[color:var(--surface)]/65 text-[color:var(--text-soft)]">
+            <HelpCircle className="h-4 w-4" />
+          </span>
+          <span className="font-medium">使用帮助</span>
+        </NavLink>
         <button
           className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm text-[color:var(--text-muted)] transition hover:bg-[color:var(--surface)]/75 hover:text-[color:var(--text)]"
           type="button"

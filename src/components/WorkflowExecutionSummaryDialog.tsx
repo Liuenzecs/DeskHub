@@ -50,15 +50,15 @@ const STATUS_STYLES: Record<VisualStepStatus, string> = {
   continued: 'border-[#ead7b2] bg-[#fbf5e8]',
   skipped: 'border-[color:var(--border)] bg-[color:var(--surface-muted)]',
   jumped: 'border-[#d8d2f0] bg-[#f7f4ff]',
-  pending: 'border-[color:var(--border)] bg-white',
+  pending: 'border-[color:var(--border)] bg-[color:var(--surface)]',
 }
 
 const STATUS_BADGE_STYLES: Record<VisualStepStatus, string> = {
-  completed: 'bg-white text-[color:var(--accent)]',
-  failed: 'bg-white text-[#c95a28]',
-  continued: 'bg-white text-[#8A5A1D]',
-  skipped: 'bg-white text-[color:var(--text-soft)]',
-  jumped: 'bg-white text-[#5a46b2]',
+  completed: 'bg-[color:var(--surface)] text-[color:var(--accent)]',
+  failed: 'bg-[color:var(--surface)] text-[#c95a28]',
+  continued: 'bg-[color:var(--surface)] text-[#8A5A1D]',
+  skipped: 'bg-[color:var(--surface)] text-[color:var(--text-soft)]',
+  jumped: 'bg-[color:var(--surface)] text-[#5a46b2]',
   pending: 'bg-[color:var(--surface-muted)] text-[color:var(--text-soft)]',
 }
 
@@ -239,7 +239,7 @@ export function WorkflowExecutionSummaryDialog({
                 {(workflow.variables ?? []).map((variable) => (
                   <div
                     key={variable.id}
-                    className="rounded-lg border border-[color:var(--border)] bg-white px-3 py-3"
+                    className="rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-3"
                   >
                     <div className="text-xs font-semibold uppercase tracking-[0.08em] text-[color:var(--text-soft)]">
                       {variable.label || variable.key}
@@ -277,34 +277,34 @@ export function WorkflowExecutionSummaryDialog({
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="rounded-xl bg-white p-2 text-[color:var(--accent)]">
+                        <span className="rounded-xl bg-[color:var(--surface)] p-2 text-[color:var(--accent)]">
                           <PlayCircle className="h-4 w-4" />
                         </span>
                         <span className="text-xs font-semibold uppercase tracking-[0.08em] text-[color:var(--text-soft)]">
                           Step {index + 1}
                         </span>
-                        <span className="rounded-md border border-[color:var(--border)] bg-white px-2 py-0.5 text-[11px] font-medium text-[color:var(--text-muted)]">
+                        <span className="rounded-md border border-[color:var(--border)] bg-[color:var(--surface)] px-2 py-0.5 text-[11px] font-medium text-[color:var(--text-muted)]">
                           {WORKFLOW_STEP_LABELS[step.type]}
                         </span>
                         {step.type === 'run_command' ? (
-                          <span className="rounded-md border border-[color:var(--border)] bg-white px-2 py-0.5 text-[11px] text-[color:var(--text-muted)]">
+                          <span className="rounded-md border border-[color:var(--border)] bg-[color:var(--surface)] px-2 py-0.5 text-[11px] text-[color:var(--text-muted)]">
                             {EXECUTION_MODE_LABELS[step.executionMode]}
                           </span>
                         ) : null}
                         {step.delayMs > 0 ? (
-                          <span className="inline-flex items-center gap-1 rounded-md border border-[color:var(--border)] bg-white px-2 py-0.5 text-[11px] text-[color:var(--text-muted)]">
+                          <span className="inline-flex items-center gap-1 rounded-md border border-[color:var(--border)] bg-[color:var(--surface)] px-2 py-0.5 text-[11px] text-[color:var(--text-muted)]">
                             <Clock3 className="h-3 w-3" />
                             延迟 {formatDelayMs(step.delayMs)}
                           </span>
                         ) : null}
                         {attempts > 1 ? (
-                          <span className="inline-flex items-center gap-1 rounded-md border border-[color:var(--border)] bg-white px-2 py-0.5 text-[11px] text-[color:var(--text-muted)]">
+                          <span className="inline-flex items-center gap-1 rounded-md border border-[color:var(--border)] bg-[color:var(--surface)] px-2 py-0.5 text-[11px] text-[color:var(--text-muted)]">
                             <RotateCcw className="h-3 w-3" />
                             尝试 {attempts} 次
                           </span>
                         ) : null}
                         {visualStatus === 'jumped' && targetStepIndex !== null ? (
-                          <span className="inline-flex items-center gap-1 rounded-md border border-[color:var(--border)] bg-white px-2 py-0.5 text-[11px] text-[color:var(--text-muted)]">
+                          <span className="inline-flex items-center gap-1 rounded-md border border-[color:var(--border)] bg-[color:var(--surface)] px-2 py-0.5 text-[11px] text-[color:var(--text-muted)]">
                             <ChevronRight className="h-3 w-3" />
                             跳至 Step {targetStepIndex + 1}
                           </span>

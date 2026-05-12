@@ -10,7 +10,7 @@ export function EmptyState({ title, description, actionLabel, onAction }: EmptyS
     <div className="surface flex min-h-48 flex-col items-start justify-center gap-4 px-5 py-6 text-left">
       <div className="flex items-center gap-3">
         <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-[color:var(--surface-muted)]">
-          <span className="absolute h-5 w-5 rounded-full border border-[color:var(--border-strong)] bg-white" />
+          <span className="absolute h-5 w-5 rounded-full border border-[color:var(--border-strong)] bg-[color:var(--surface)]" />
           <span className="absolute h-7 w-7 rounded-full border border-dashed border-[color:var(--border)]" />
         </div>
         <div className="h-10 w-px bg-[color:var(--border)]" />

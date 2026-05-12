@@ -118,12 +118,12 @@ export function BatchEditModal({
                 描述、标签和图标都支持按需更新，不会影响未勾选字段。
               </div>
             </div>
-            <span className="rounded-xl border border-[color:var(--border)] bg-white px-3 py-1.5 text-xs font-medium text-[color:var(--text-muted)]">
+            <span className="rounded-xl border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-1.5 text-xs font-medium text-[color:var(--text-muted)]">
               {selectedCount} 项
             </span>
           </div>
 
-          <label className="grid gap-3 rounded-2xl border border-[color:var(--border)] bg-white px-4 py-4">
+          <label className="grid gap-3 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-4">
             <div className="flex items-center gap-3">
               <input
                 checked={applyDescription}
@@ -145,7 +145,7 @@ export function BatchEditModal({
             />
           </label>
 
-          <label className="grid gap-3 rounded-2xl border border-[color:var(--border)] bg-white px-4 py-4">
+          <label className="grid gap-3 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-4">
             <div className="flex items-center gap-3">
               <input
                 checked={applyTags}
@@ -178,7 +178,7 @@ export function BatchEditModal({
             </div>
           </label>
 
-          <label className="grid gap-3 rounded-2xl border border-[color:var(--border)] bg-white px-4 py-4">
+          <label className="grid gap-3 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-4">
             <div className="flex items-center gap-3">
               <input
                 checked={applyIcon}
